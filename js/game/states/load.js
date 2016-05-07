@@ -16,7 +16,7 @@ var loadState = {
         game.load.setPreloadSprite(progressBar);
 
         // Load all image assets
-        game.load.spritesheet('hero', 'assets/images/hero-hitted-and-damaged.png', 28, 22);
+        game.load.spritesheet('hero', 'assets/images/hero-hitted-and-damaged.png', 40, 40);
 
 
     },
