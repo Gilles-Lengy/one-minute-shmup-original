@@ -1,9 +1,14 @@
 var loadState = {
 
     preload: function () {      
-        // Add a loading label 
-        var loadingLabel = game.add.text(game.width/2, 150, 'loading...', { font: '30px Arial', fill: '#ffffff' });
-        loadingLabel.anchor.setTo(0.5, 0.5);
+        // Add a loading label that we won't to really load the google fonts
+        var loadingLabel1 = game.add.text(game.width/2, 600, 'loading...');
+        loadingLabel1.font = 'Ranga';
+        loadingLabel1.anchor.setTo(0.5, 0.5);
+
+        var loadingLabel2 = game.add.text(game.width/2, 600, 'loading...');
+        loadingLabel2.font = 'Seaweed Script';
+        loadingLabel2.anchor.setTo(0.5, 0.5);
 
         // Add a progress bar
         var progressBar = game.add.sprite(game.width/2, 200, 'progressBar');
