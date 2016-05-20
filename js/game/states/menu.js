@@ -1,4 +1,4 @@
-var pad1;
+var pad;
 var menuState = {
 
     create: function () {
@@ -8,11 +8,11 @@ var menuState = {
 
         // To listen to buttons from a specific pad listen directly on that pad game.input.gamepad.padX, where X = pad 1-4
 
-        pad1 = game.input.gamepad.pad1;
+        pad = game.input.gamepad.pad1;
 
         // To detect the pressed buttons
-       // pad1.addCallbacks(this, {onConnect: game.addButtons360});
-        pad1.getButton(Phaser.Gamepad.XBOX360_A).onDown.add(menuState.onDown360, this);
+      //pad1.addCallbacks(this, {onConnect: game.addButtons360});
+        pad.getButton(Phaser.Gamepad.XBOX360_A).onDown.add(menuState.onDown360, this);
 
         // Hero
         var hero = game.add.sprite(game.world.centerX, -20, 'hero');
