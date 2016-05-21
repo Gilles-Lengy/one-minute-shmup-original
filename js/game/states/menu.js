@@ -1,9 +1,15 @@
+// Variables
+var pad;
+var buttonStart;
+var buttonA;
+var buttonB;
+var buttonX;
+var buttonY;
 var menuState = {
 
     create: function () {
 
-        // Variables
-        var pad;
+
 
         // Start gamepad
         game.input.gamepad.start();
@@ -13,8 +19,8 @@ var menuState = {
         pad = game.input.gamepad.pad1;
 
         // To detect the pressed buttons
-      //pad1.addCallbacks(this, {onConnect: game.addButtons360});
-        pad.getButton(Phaser.Gamepad.XBOX360_START).onDown.add(this.onDown360Menu, this);
+        pad.addCallbacks(this, {onConnect: this.addButtons});
+        //pad.getButton(Phaser.Gamepad.XBOX360_START).onDown.add(this.onDown360Menu, this);
 
         // Hero
         var hero = game.add.sprite(game.world.centerX, -20, 'hero');
@@ -57,14 +63,42 @@ var menuState = {
 
 
     },
-    onDown360Menu:function(button) {
-    console.log('onDown360 MENU');
-    if (button.buttonCode === Phaser.Gamepad.XBOX360_START) {
-        console.log('Go to Play');
-        game.state.start('play');
+    /*
+    onDown360Menu: function (button) {
+        console.log('onDown360 MENU');
+        if (button.buttonCode === Phaser.Gamepad.XBOX360_START) {
+            console.log('Go to Play');
+            game.state.start('play');
+        }
+    },*/
+    addButtons: function () {
+
+        //  We can't do this until we know that the gamepad has been connected and is started
+
+        buttonStart = pad.getButton(Phaser.Gamepad.XBOX360_START);
+        buttonA = pad.getButton(Phaser.Gamepad.XBOX360_A);
+        buttonB = pad.getButton(Phaser.Gamepad.XBOX360_B);
+        buttonX = pad.getButton(Phaser.Gamepad.XBOX360_X);
+        buttonY = pad.getButton(Phaser.Gamepad.XBOX360_Y);
+
+        buttonStart.onDown.add(this.onDown, this);
+        buttonA.onDown.add(this.onDown, this);
+        buttonB.onDown.add(this.onDown, this);
+        buttonX.onDown.add(this.onDown, this);
+        buttonY.onDown.add(this.onDown, this);
+
+
+    },
+    onDown: function (button) {
+
+        if (button.buttonCode === Phaser.Gamepad.XBOX360_START) {
+            console.log('onDown Go to Play');
+            game.state.start('play');
+        }
+
+
     }
 
-}
 
 };
 
