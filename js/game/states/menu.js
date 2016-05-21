@@ -1,7 +1,9 @@
-var pad;
 var menuState = {
 
     create: function () {
+
+        // Variables
+        var pad;
 
         // Start gamepad
         game.input.gamepad.start();
