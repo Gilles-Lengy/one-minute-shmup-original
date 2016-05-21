@@ -17,6 +17,7 @@ var loadState = {
 
         // Load all image assets
         game.load.spritesheet('hero', 'assets/images/hero-hitted-and-damaged.png', 40, 40);
+        game.load.image('hero-bullet', 'assets/images/bullet-hero-1.png');
 
 
     },

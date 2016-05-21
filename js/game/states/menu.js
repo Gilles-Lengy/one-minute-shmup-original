@@ -14,7 +14,7 @@ var menuState = {
 
         // To detect the pressed buttons
       //pad1.addCallbacks(this, {onConnect: game.addButtons360});
-        pad.getButton(Phaser.Gamepad.XBOX360_A).onDown.add(menuState.onDown360, this);
+        pad.getButton(Phaser.Gamepad.XBOX360_START).onDown.add(this.onDown360Menu, this);
 
         // Hero
         var hero = game.add.sprite(game.world.centerX, -20, 'hero');
@@ -47,7 +47,7 @@ var menuState = {
         }, 1000).easing(Phaser.Easing.Bounce.Out).delay(1000).start();
 
         // How to start the game, with tween
-        var startLabel = game.add.text(game.width / 2, game.height / 2, 'Press the button A to start', {
+        var startLabel = game.add.text(game.width / 2, game.height / 2, 'Press the button START', {
             font: '25px Arial',
             fill: '#ffffff'
         });
@@ -57,10 +57,10 @@ var menuState = {
 
 
     },
-     onDown360:function(button) {
-    console.log('onDown360');
-    if (button.buttonCode === Phaser.Gamepad.XBOX360_A) {
-        console.log('Play');
+    onDown360Menu:function(button) {
+    console.log('onDown360 MENU');
+    if (button.buttonCode === Phaser.Gamepad.XBOX360_START) {
+        console.log('Go to Play');
         game.state.start('play');
     }
 
