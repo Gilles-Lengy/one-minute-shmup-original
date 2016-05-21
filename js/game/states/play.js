@@ -31,6 +31,19 @@ var playState = {
     },
 
     update: function () {
+        // Moves the Hero
+        // Controls
+        if (pad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1) {
+            if (hero.x > 25) {
+                hero.x -= 3;
+            }
+        }
+        else if (pad.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) > 0.1) {
+            if (hero.x < 475) {
+                hero.x += 3;
+            }
+        }
+
     },
     heroFlashes: function () {
 
@@ -41,7 +54,7 @@ var playState = {
         }
 
     },
-    heroFireBullet: function() {
+    heroFireBullet: function () {
         console.log('heroFireBullet');
         // Retrieve a bullet from the bullets group
         var bullet = this.heroBullets.getFirstDead();
@@ -51,14 +64,14 @@ var playState = {
 
         // Init the bullet
         bullet.anchor.setTo(0.5, 1);
-        bullet.reset(hero.x, hero.y - hero.height/2);
+        bullet.reset(hero.x, hero.y - hero.height / 2);
         bullet.body.velocity.y = -400;
 
         // Kill the bullet when out of the world
         bullet.checkWorldBounds = true;
         bullet.outOfBoundsKill = true;
     },
-    onDown360Play:function(button) {
+    onDown360Play: function (button) {
         console.log('onDown360 Play');
         if (button.buttonCode === Phaser.Gamepad.XBOX360_A) {
             this.heroFireBullet();
