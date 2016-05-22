@@ -3,6 +3,7 @@ var pad;
 var hero;
 var bomber1;
 var bomber2;
+var tracker;
 
 var playState = {
 
@@ -29,13 +30,12 @@ var playState = {
         this.heroBullets.createMultiple(18, 'hero-bullet');
 
         // Create Bomber 1
-this.createBomber(bomber1,bomber1,250);
+        this.createBomber(bomber1, bomber1, 250);
         // Create Bomber 2
-        this.createBomber(bomber2,bomber2,150);
+        this.createBomber(bomber2, bomber2, 175);
+        // Create Tracker
+        this.createTracker();
 
-
-
- 
 
     },
 
@@ -86,7 +86,7 @@ this.createBomber(bomber1,bomber1,250);
             this.heroFireBullet();
         }
     },
-    createBomber: function(varBomber,nameBomber,YPosBomber){
+    createBomber: function (varBomber, nameBomber, YPosBomber) {
         varBomber = game.add.sprite(game.world.centerX, YPosBomber, 'bomber');
         varBomber.anchor.setTo(0.5, 0.5);
         varBomber.alive = true;
@@ -97,6 +97,35 @@ this.createBomber(bomber1,bomber1,250);
         varBomber.animations.play('blink', 3, true);
         varBomber.name = nameBomber;
 
-}
+    },
+    createTracker: function () {
+        // var
+        //var lr;
+        //var y;
+        //this.game = game;
+        // Determinate if the tracker appear on the Left or on the Right
+        //lr = this.game.rnd.integerInRange(1, 100);
+        // The starting position of the tracker and consquently his moving direction
+        //var y = 125;
+        /*
+         this.moveY = 0;
+         if (lr > 50) {
+         var x = -60;
+         this.moveX = trackerMoveX;
+         } else {
+         var x = 560;
+         this.moveX = -trackerMoveX;
+         }
+         this.health = 1;
+         */
+
+        //this.fireRaysTimer = game.time.now;
+        tracker = game.add.sprite(game.world.centerX, 125, 'tracker');
+        tracker.anchor.setTo(0.5, 0.5);
+        tracker.alive = true;
+        //this.game.physics.arcade.enable(this.tracker);
+        tracker.name = 'tracker';
+        //this.tracker.heroDetectedByTracker = false;
+    }
 
 };
