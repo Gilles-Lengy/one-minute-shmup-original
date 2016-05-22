@@ -4,6 +4,7 @@ var hero;
 var bomber1;
 var bomber2;
 var tracker;
+var boss;
 
 var playState = {
 
@@ -35,6 +36,8 @@ var playState = {
         this.createBomber(bomber2, bomber2, 175);
         // Create Tracker
         this.createTracker();
+        // Create Boss
+        this.createBoss();
 
 
     },
@@ -126,6 +129,33 @@ var playState = {
         //this.game.physics.arcade.enable(this.tracker);
         tracker.name = 'tracker';
         //this.tracker.heroDetectedByTracker = false;
+    },
+    createBoss: function () {
+        // var
+        /*
+         var lr;
+         var y;
+         this.game = game;
+         // Determinate if the bomber appear on the Left or on the Right
+         lr = this.game.rnd.integerInRange(1, 100);
+         // The starting position of the bomber and consquently his moving direction
+         y = 25;
+         if (lr > 50) {
+         var x = -60;
+         this.moveX = boss1Move;
+         } else {
+         var x = 560;
+         this.moveX = -boss1Move;
+         }
+         */
+        boss = game.add.sprite(game.world.centerX, 75, 'boss');
+        boss.anchor.setTo(0.5, 0.5);
+        boss.health = 5;
+        boss.alive = true;
+        //boss.fireRayTimer = game.time.now;
+
+        //this.game.physics.arcade.enable(this.boss1);
+        boss.name = 'boss';
     }
 
 };

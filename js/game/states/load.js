@@ -21,6 +21,7 @@ var loadState = {
         game.load.spritesheet('hero', 'assets/images/hero-hitted-and-damaged.png', 40, 40);
         game.load.spritesheet('bomber', 'assets/images/enemy-bomber-1.png', 60, 40, 3);
         game.load.spritesheet('tracker', 'assets/images/enemy-tracker-1-and-explode.png', 40, 36, 5);
+        game.load.spritesheet('boss', 'assets/images/boss-1-explode.png', 120, 90, 5);
 
 
     },
