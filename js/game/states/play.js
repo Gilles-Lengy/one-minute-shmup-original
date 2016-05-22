@@ -1,6 +1,23 @@
-// Variables
+/**************************************************
+* Variables
+*************************************************/
+// Input
 var pad;
+
+// texts
+var countdownDisplay = 60;
+var countdownString = 'Countdown : ';
+var countdownText;
+var scoreString = 'Score : ';
+var scoreText;
+var levelString = 'Level : ';
+var level = 1;
+var levelText;
+
+// Hero
 var hero;
+
+// Enemies
 var bomber1;
 var bomber2;
 var tracker;
@@ -10,6 +27,9 @@ var playState = {
 
     create: function () {
 
+        // Global Variables
+        game.global.score = 0;
+
         // Start gamepad
         game.input.gamepad.start();
 
@@ -17,6 +37,14 @@ var playState = {
         pad = game.input.gamepad.pad1;
         // To detect the pressed buttons
         pad.getButton(Phaser.Gamepad.XBOX360_A).onDown.add(this.onDown360Play, this);
+
+        // The countdown and the level
+        game.time.events.repeat(Phaser.Timer.SECOND, 60, this.countDown, this);
+        countdownText = game.add.text(200, 0, countdownString + countdownDisplay, {fontSize: '18px', fill: '#fff'});
+        levelText = game.add.text(420, 0, levelString + level, {fontSize: '18px', fill: '#fff'});
+
+        // The score
+        scoreText = game.add.text(5, 0, scoreString +  game.global.score, {fontSize: '18px', fill: '#fff'});
 
 
         // Hero
@@ -156,6 +184,22 @@ var playState = {
 
         //this.game.physics.arcade.enable(this.boss1);
         boss.name = 'boss';
+    },
+    countDown: function () {
+    countdownDisplay -= 1;
+    countdownText.setText(countdownString + countdownDisplay);
+    switch (countdownDisplay) {
+        case 45:
+            level = 2;
+            break;
+        case 30:
+            level = 3;
+            break;
+        case 15:
+            level = 4;
+            break;
     }
+    levelText.setText(levelString + level);
+}
 
 };
