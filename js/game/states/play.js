@@ -2,6 +2,7 @@
 var pad;
 var hero;
 var bomber1;
+var bomber2;
 
 var playState = {
 
@@ -28,17 +29,11 @@ var playState = {
         this.heroBullets.createMultiple(18, 'hero-bullet');
 
         // Create Bomber 1
-        bomber1 = game.add.sprite(game.world.centerX, 250, 'bomber');
-        bomber1.anchor.setTo(0.5, 0.5);
-        bomber1.alive = true;
-        //this.dropBombTimer = game.time.now;
-        //this.fireRayTimer = game.time.now;
-        //this.game.physics.arcade.enable(this);
-        bomber1.animations.add('blink');
-        bomber1.animations.play('blink', 3, true);
-        bomber1.name = "bomber1";
+this.createBomber(bomber1,bomber1,250);
+        // Create Bomber 2
+        this.createBomber(bomber2,bomber2,150);
 
-        
+
 
  
 
@@ -90,6 +85,18 @@ var playState = {
         if (button.buttonCode === Phaser.Gamepad.XBOX360_A) {
             this.heroFireBullet();
         }
-    }
+    },
+    createBomber: function(varBomber,nameBomber,YPosBomber){
+        varBomber = game.add.sprite(game.world.centerX, YPosBomber, 'bomber');
+        varBomber.anchor.setTo(0.5, 0.5);
+        varBomber.alive = true;
+        //this.dropBombTimer = game.time.now;
+        //this.fireRayTimer = game.time.now;
+        //this.game.physics.arcade.enable(this);
+        varBomber.animations.add('blink');
+        varBomber.animations.play('blink', 3, true);
+        varBomber.name = nameBomber;
+
+}
 
 };
