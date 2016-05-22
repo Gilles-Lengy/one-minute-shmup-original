@@ -1,12 +1,11 @@
 // Variables
 var pad;
 var hero;
+var bomber1;
+
 var playState = {
 
     create: function () {
-
-
-
 
         // Start gamepad
         game.input.gamepad.start();
@@ -27,6 +26,21 @@ var playState = {
         this.heroBullets = game.add.group();
         this.heroBullets.enableBody = true;
         this.heroBullets.createMultiple(18, 'hero-bullet');
+
+        // Create Bomber 1
+        bomber1 = game.add.sprite(game.world.centerX, 250, 'bomber');
+        bomber1.anchor.setTo(0.5, 0.5);
+        bomber1.alive = true;
+        //this.dropBombTimer = game.time.now;
+        //this.fireRayTimer = game.time.now;
+        //this.game.physics.arcade.enable(this);
+        bomber1.animations.add('blink');
+        bomber1.animations.play('blink', 3, true);
+        bomber1.name = "bomber1";
+
+        
+
+ 
 
     },
 
