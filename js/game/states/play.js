@@ -25,6 +25,7 @@ var boss;
 
 // VelocityX
 var bomberVelocityX = 75;
+var trackerVelocityX = 200;
 
 var playState = {
 
@@ -69,13 +70,17 @@ var playState = {
         bomber2.x = 560;
 
         // Create Tracker
-        this.createTracker();
+        tracker = this.createTracker();
+        // Hide Bomber 2;
+        tracker.x = 560;
         // Create Boss
         this.createBoss();
 
         // Launch Bomber 1
         this.launchBomber(bomber1);
         game.time.events.repeat(Phaser.Timer.SECOND / 4, 240, this.relaunchBomber, this);
+
+        game.time.events.repeat(Phaser.Timer.SECOND / 4, 240, this.relaunchTracker, this);
 
     },
 
@@ -97,6 +102,9 @@ var playState = {
 
         if (level > 1) {
             this.updateBomber(bomber2);
+        }
+        if(level > 2){
+            this.updateTracker();
         }
 
 
@@ -204,12 +212,50 @@ var playState = {
          */
 
         //this.fireRaysTimer = game.time.now;
-        tracker = game.add.sprite(game.world.centerX, 125, 'tracker');
+        tracker = game.add.sprite(game.world.centerX, 140, 'tracker');
         tracker.anchor.setTo(0.5, 0.5);
         tracker.alive = true;
-        //this.game.physics.arcade.enable(this.tracker);
+        tracker.health=0;
+        game.physics.arcade.enable(tracker);
+        tracker.enableBody = true;
         tracker.name = 'tracker';
         //this.tracker.heroDetectedByTracker = false;
+        return tracker;
+    },
+    launchTracker: function () {
+        tracker.health = 1;
+        // var
+        var lr;
+
+        // Determinate if the bomber appear on the Left or on the Right
+        lr = game.rnd.integerInRange(1, 100);
+        // The starting position of the bomber and consequently his moving direction
+        if (lr > 50) {
+            tracker.x = -40;
+            tracker.body.velocity.x = trackerVelocityX;
+        } else {
+            tracker.x = 540;
+            tracker.body.velocity.x = -trackerVelocityX;
+        }
+
+    },
+    relaunchTracker: function () {
+
+        if (tracker.health === 0 && level > 2) {
+            this.launchTracker();
+        }
+
+    },
+    updateTracker: function () {
+
+        var posX = tracker.x;
+        // Moves the tracker
+        if (posX < 25) {
+            tracker.body.velocity.x = trackerVelocityX;
+        }
+        if (posX > 475) {
+            tracker.body.velocity.x = -trackerVelocityX;
+        }
     },
     createBoss: function () {
         // var
