@@ -24,7 +24,7 @@ var tracker;
 var boss;
 
 // VelocityX
-var bomberVelocityX = 200;
+var bomberVelocityX = 75;
 
 var playState = {
 
@@ -64,7 +64,10 @@ var playState = {
         // Create Bomber 1
         bomber1 = this.createBomber(bomber1, bomber1, 250);
         // Create Bomber 2
-        this.createBomber(bomber2, bomber2, 175);
+        bomber2 = this.createBomber(bomber2, bomber2, 175);
+        // Hide Bomber 2;
+        bomber2.x = 560;
+
         // Create Tracker
         this.createTracker();
         // Create Boss
@@ -72,12 +75,13 @@ var playState = {
 
         // Launch Bomber 1
         this.launchBomber(bomber1);
+        game.time.events.repeat(Phaser.Timer.SECOND / 4, 240, this.relaunchBomber, this);
 
     },
 
     update: function () {
+
         // Moves the Hero
-        // Controls
         if (pad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1) {
             if (hero.x > 25) {
                 hero.x -= 3;
@@ -87,6 +91,12 @@ var playState = {
             if (hero.x < 475) {
                 hero.x += 3;
             }
+        }
+
+        this.updateBomber(bomber1);
+
+        if (level > 1) {
+            this.updateBomber(bomber2);
         }
 
 
@@ -127,6 +137,7 @@ var playState = {
         varBomber = game.add.sprite(game.world.centerX, YPosBomber, 'bomber');
         varBomber.anchor.setTo(0.5, 0.5);
         varBomber.alive = true;
+        varBomber.health = 0;
         //this.dropBombTimer = game.time.now;
         //this.fireRayTimer = game.time.now;
         game.physics.arcade.enable(varBomber);
@@ -138,12 +149,13 @@ var playState = {
 
     },
     launchBomber: function (varBomber) {
+        varBomber.health = 1;
         // var
         var lr;
 
         // Determinate if the bomber appear on the Left or on the Right
         lr = game.rnd.integerInRange(1, 100);
-        // The starting position of the bomber and consquently his moving direction
+        // The starting position of the bomber and consequently his moving direction
         if (lr > 50) {
             varBomber.x = -60;
             varBomber.body.velocity.x = bomberVelocityX;
@@ -152,6 +164,23 @@ var playState = {
             varBomber.body.velocity.x = -bomberVelocityX;
         }
 
+    },
+    relaunchBomber: function () {
+
+        if (bomber1.health === 0) {
+
+            this.launchBomber(bomber1);
+        }
+        if (bomber2.health === 0 && level > 1) {
+
+            this.launchBomber(bomber2);
+        }
+    },
+    updateBomber: function (varBomber) {
+        // alive false if varBomber out of game area
+        if (varBomber.x < -60 || varBomber.x > 560) {
+            varBomber.health = 0;
+        }
     },
     createTracker: function () {
         // var
