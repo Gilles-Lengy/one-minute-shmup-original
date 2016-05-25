@@ -1,6 +1,6 @@
 /**************************************************
-* Variables
-*************************************************/
+ * Variables
+ *************************************************/
 // Input
 var pad;
 
@@ -23,6 +23,9 @@ var bomber2;
 var tracker;
 var boss;
 
+// VelocityX
+var bomberVelocityX = 200;
+
 var playState = {
 
     create: function () {
@@ -44,7 +47,7 @@ var playState = {
         levelText = game.add.text(420, 0, levelString + level, {fontSize: '18px', fill: '#fff'});
 
         // The score
-        scoreText = game.add.text(5, 0, scoreString +  game.global.score, {fontSize: '18px', fill: '#fff'});
+        scoreText = game.add.text(5, 0, scoreString + game.global.score, {fontSize: '18px', fill: '#fff'});
 
 
         // Hero
@@ -59,7 +62,7 @@ var playState = {
         this.heroBullets.createMultiple(18, 'hero-bullet');
 
         // Create Bomber 1
-        this.createBomber(bomber1, bomber1, 250);
+        bomber1 = this.createBomber(bomber1, bomber1, 250);
         // Create Bomber 2
         this.createBomber(bomber2, bomber2, 175);
         // Create Tracker
@@ -67,6 +70,8 @@ var playState = {
         // Create Boss
         this.createBoss();
 
+        // Launch Bomber 1
+        this.launchBomber(bomber1);
 
     },
 
@@ -83,6 +88,7 @@ var playState = {
                 hero.x += 3;
             }
         }
+
 
     },
     heroFlashes: function () {
@@ -123,10 +129,28 @@ var playState = {
         varBomber.alive = true;
         //this.dropBombTimer = game.time.now;
         //this.fireRayTimer = game.time.now;
-        //this.game.physics.arcade.enable(this);
+        game.physics.arcade.enable(varBomber);
+        varBomber.enableBody = true;
         varBomber.animations.add('blink');
         varBomber.animations.play('blink', 3, true);
         varBomber.name = nameBomber;
+        return varBomber;
+
+    },
+    launchBomber: function (varBomber) {
+        // var
+        var lr;
+
+        // Determinate if the bomber appear on the Left or on the Right
+        lr = game.rnd.integerInRange(1, 100);
+        // The starting position of the bomber and consquently his moving direction
+        if (lr > 50) {
+            varBomber.x = -60;
+            varBomber.body.velocity.x = bomberVelocityX;
+        } else {
+            varBomber.x = 560;
+            varBomber.body.velocity.x = -bomberVelocityX;
+        }
 
     },
     createTracker: function () {
@@ -186,20 +210,20 @@ var playState = {
         boss.name = 'boss';
     },
     countDown: function () {
-    countdownDisplay -= 1;
-    countdownText.setText(countdownString + countdownDisplay);
-    switch (countdownDisplay) {
-        case 45:
-            level = 2;
-            break;
-        case 30:
-            level = 3;
-            break;
-        case 15:
-            level = 4;
-            break;
+        countdownDisplay -= 1;
+        countdownText.setText(countdownString + countdownDisplay);
+        switch (countdownDisplay) {
+            case 45:
+                level = 2;
+                break;
+            case 30:
+                level = 3;
+                break;
+            case 15:
+                level = 4;
+                break;
+        }
+        levelText.setText(levelString + level);
     }
-    levelText.setText(levelString + level);
-}
 
 };
