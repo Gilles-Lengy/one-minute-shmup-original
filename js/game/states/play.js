@@ -67,18 +67,13 @@ var playState = {
         bomber1 = this.createBomber(bomber1, bomber1, 250);
         // Create Bomber 2
         bomber2 = this.createBomber(bomber2, bomber2, 175);
-        // Hide Bomber 2
-        bomber2.x = 560;
 
         // Create Tracker
         tracker = this.createTracker();
-        // Hide Tracker
-        tracker.x = 540;
 
         // Create Boss
         boss = this.createBoss();
-        // Hide Boos
-        boss.x = 560;
+
 
         // Launch Bomber 1
         this.launchBomber(bomber1);
@@ -152,7 +147,7 @@ var playState = {
         }
     },
     createBomber: function (varBomber, nameBomber, YPosBomber) {
-        varBomber = game.add.sprite(game.world.centerX, YPosBomber, 'bomber');
+        varBomber = game.add.sprite(560, YPosBomber, 'bomber');
         varBomber.anchor.setTo(0.5, 0.5);
         varBomber.alive = true;
         varBomber.health = 0;
@@ -222,7 +217,7 @@ var playState = {
          */
 
         //this.fireRaysTimer = game.time.now;
-        tracker = game.add.sprite(game.world.centerX, 140, 'tracker');
+        tracker = game.add.sprite(520, 140, 'tracker');
         tracker.anchor.setTo(0.5, 0.5);
         tracker.alive = true;
         tracker.health=0;
