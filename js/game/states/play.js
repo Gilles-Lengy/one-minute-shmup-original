@@ -26,6 +26,7 @@ var boss;
 // VelocityX
 var bomberVelocityX = 75;
 var trackerVelocityX = 200;
+var bossVelocityX = 125;
 
 var playState = {
 
@@ -66,15 +67,18 @@ var playState = {
         bomber1 = this.createBomber(bomber1, bomber1, 250);
         // Create Bomber 2
         bomber2 = this.createBomber(bomber2, bomber2, 175);
-        // Hide Bomber 2;
+        // Hide Bomber 2
         bomber2.x = 560;
 
         // Create Tracker
         tracker = this.createTracker();
-        // Hide Bomber 2;
-        tracker.x = 560;
+        // Hide Tracker
+        tracker.x = 540;
+
         // Create Boss
-        this.createBoss();
+        boss = this.createBoss();
+        // Hide Boos
+        boss.x = 560;
 
         // Launch Bomber 1
         this.launchBomber(bomber1);
@@ -105,6 +109,12 @@ var playState = {
         }
         if(level > 2){
             this.updateTracker();
+        }
+        if(level>3){
+            if(boss.health === 0){
+                this.launchBoss();
+            }
+            this.updateBoss();
         }
 
 
@@ -275,14 +285,44 @@ var playState = {
          this.moveX = -boss1Move;
          }
          */
-        boss = game.add.sprite(game.world.centerX, 75, 'boss');
+        boss = game.add.sprite(560, 75, 'boss');
         boss.anchor.setTo(0.5, 0.5);
-        boss.health = 5;
+        boss.health = 0;
         boss.alive = true;
+        game.physics.arcade.enable(boss);
         //boss.fireRayTimer = game.time.now;
 
         //this.game.physics.arcade.enable(this.boss1);
         boss.name = 'boss';
+        return boss;
+    },
+    launchBoss: function () {
+        boss.health = 5;
+        // var
+        var lr;
+
+        // Determinate if the bomber appear on the Left or on the Right
+        lr = game.rnd.integerInRange(1, 100);
+        // The starting position of the bomber and consequently his moving direction
+        if (lr > 50) {
+            boss.x = -60;
+            boss.body.velocity.x = trackerVelocityX;
+        } else {
+            boss.x = 560;
+            boss.body.velocity.x = -trackerVelocityX;
+        }
+
+    },
+    updateBoss: function () {
+
+        var posX = boss.x;
+        // Moves the boss
+        if (posX < 65) {
+            boss.body.velocity.x = bossVelocityX;
+        }
+        if (posX > 435) {
+            boss.body.velocity.x = -bossVelocityX;
+        }
     },
     countDown: function () {
         countdownDisplay -= 1;
