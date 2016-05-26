@@ -64,9 +64,9 @@ var playState = {
         this.heroBullets.createMultiple(18, 'hero-bullet');
 
         // Create Bomber 1
-        bomber1 = this.createBomber(bomber1, bomber1, 250);
+        bomber1 = this.createBomber(bomber1, bomber1, 145);
         // Create Bomber 2
-        bomber2 = this.createBomber(bomber2, bomber2, 175);
+        bomber2 = this.createBomber(bomber2, bomber2, 195);
 
         // Create Tracker
         tracker = this.createTracker();
@@ -141,7 +141,7 @@ var playState = {
         bullet.outOfBoundsKill = true;
     },
     onDown360Play: function (button) {
-        console.log('onDown360 Play');
+        //console.log('onDown360 Play');
         if (button.buttonCode === Phaser.Gamepad.XBOX360_A) {
             this.heroFireBullet();
         }
@@ -217,7 +217,7 @@ var playState = {
          */
 
         //this.fireRaysTimer = game.time.now;
-        tracker = game.add.sprite(520, 140, 'tracker');
+        tracker = game.add.sprite(520, 260, 'tracker');
         tracker.anchor.setTo(0.5, 0.5);
         tracker.alive = true;
         tracker.health=0;
