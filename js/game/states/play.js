@@ -252,14 +252,15 @@ var playState = {
 
     },
     updateTracker: function () {
-
-        var posX = tracker.x;
-        // Moves the tracker
-        if (posX < 25) {
-            tracker.body.velocity.x = trackerVelocityX;
-        }
-        if (posX > 475) {
-            tracker.body.velocity.x = -trackerVelocityX;
+        if (tracker.health === 1) {
+            var posX = tracker.x;
+            // Moves the tracker
+            if (posX < 25) {
+                tracker.body.velocity.x = trackerVelocityX;
+            }
+            if (posX > 475) {
+                tracker.body.velocity.x = -trackerVelocityX;
+            }
         }
     },
     createBoss: function () {
