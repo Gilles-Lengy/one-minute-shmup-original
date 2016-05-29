@@ -1,26 +1,21 @@
-// Variables
-var pad;
-var buttonStart;
-var buttonA;
-var buttonB;
-var buttonX;
-var buttonY;
 var menuState = {
 
     create: function () {
 
 
 
-        // Start gamepad
-        game.input.gamepad.start();
 
-        // To listen to buttons from a specific pad listen directly on that pad game.input.gamepad.padX, where X = pad 1-4
+        if(!game.input.gamepad.active) {
+            // Start gamepad
+            game.input.gamepad.start();
+            // To listen to buttons from a specific pad listen directly on that pad game.input.gamepad.padX, where X = pad 1-4
 
-        pad = game.input.gamepad.pad1;
+            pad = game.input.gamepad.pad1;
 
-        // To detect the pressed buttons
-        pad.addCallbacks(this, {onConnect: this.addButtons});
-        //pad.getButton(Phaser.Gamepad.XBOX360_START).onDown.add(this.onDown360Menu, this);
+            // To detect the pressed buttons
+            pad.addCallbacks(this, {onConnect: this.addButtons});
+            //pad.getButton(Phaser.Gamepad.XBOX360_START).onDown.add(this.onDown360Menu, this);
+        }
 
         // Hero
         var hero = game.add.sprite(game.world.centerX, -20, 'hero');
@@ -75,17 +70,17 @@ var menuState = {
 
         //  We can't do this until we know that the gamepad has been connected and is started
 
-        buttonStart = pad.getButton(Phaser.Gamepad.XBOX360_START);
-        buttonA = pad.getButton(Phaser.Gamepad.XBOX360_A);
-        buttonB = pad.getButton(Phaser.Gamepad.XBOX360_B);
-        buttonX = pad.getButton(Phaser.Gamepad.XBOX360_X);
-        buttonY = pad.getButton(Phaser.Gamepad.XBOX360_Y);
+        this.buttonStart = pad.getButton(Phaser.Gamepad.XBOX360_START);
+        this.buttonA = pad.getButton(Phaser.Gamepad.XBOX360_A);
+        this.buttonB = pad.getButton(Phaser.Gamepad.XBOX360_B);
+        this.buttonX = pad.getButton(Phaser.Gamepad.XBOX360_X);
+        this.buttonY = pad.getButton(Phaser.Gamepad.XBOX360_Y);
 
-        buttonStart.onDown.add(this.onDown, this);
-        buttonA.onDown.add(this.onDown, this);
-        buttonB.onDown.add(this.onDown, this);
-        buttonX.onDown.add(this.onDown, this);
-        buttonY.onDown.add(this.onDown, this);
+        this.buttonStart.onDown.add(this.onDown, this);
+        this.buttonA.onDown.add(this.onDown, this);
+        this.buttonB.onDown.add(this.onDown, this);
+        this.buttonX.onDown.add(this.onDown, this);
+        this.buttonY.onDown.add(this.onDown, this);
 
 
     },
