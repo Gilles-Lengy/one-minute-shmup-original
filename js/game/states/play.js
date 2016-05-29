@@ -75,6 +75,8 @@ var playState = {
         this.timerTrackerGenerator = game.time.events.repeat(Phaser.Timer.SECOND / 4, 250, this.relaunchTracker, this);
         //this.timerTrackerGenerator.start();
 
+        this.timerGameCompleted = game.time.events.add(Phaser.Timer.MINUTE, this.gameCompleted, this);
+
         console.log('end create play');
     },
 
@@ -96,7 +98,6 @@ var playState = {
 
         if (this.level > 1) {
             this.updateBomber(this.bomber2);
-            game.state.start('gamerOver');
         }
         if (this.level > 2) {
             this.updateTracker();
@@ -107,6 +108,8 @@ var playState = {
             }
             this.updateBoss();
         }
+
+
 
 
     },
@@ -307,7 +310,7 @@ var playState = {
     },
     updateBoss: function () {
 
-        var posX = boss.x;
+        var posX = this.boss.x;
         // Moves the boss
         if (posX < 65) {
             this.boss.body.velocity.x = this.bossVelocityX;
@@ -332,8 +335,12 @@ var playState = {
         }
         this.levelText.setText(this.levelString + this.level);
     },
+    gameCompleted: function(){
+        game.state.start('gamerOver');
+    },
     shutdown: function () {
         this.hero.destroy();
+        this.timerGameCompleted.timer.removeAll();
         this.timerHeroFlashes.timer.removeAll();
         this.timerCountDownGame.timer.removeAll();
         this.timerBombersGenerator.timer.removeAll();
