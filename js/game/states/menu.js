@@ -92,6 +92,8 @@ var menuState = {
     onDown: function (button) {
 
         if (button.buttonCode === Phaser.Gamepad.XBOX360_START) {
+            // Destroy gamepad
+           // game.input.gamepad.destroy();
             console.log('onDown Go to Play');
             game.state.start('play');
         }

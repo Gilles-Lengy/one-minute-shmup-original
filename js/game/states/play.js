@@ -1,39 +1,24 @@
-/**************************************************
- * Variables
- *************************************************/
-// Input
-var pad;
-
-// texts
-var countdownDisplay = 60;
-var countdownString = 'Countdown : ';
-var countdownText;
-var scoreString = 'Score : ';
-var scoreText;
-var levelString = 'Level : ';
-var level = 1;
-var levelText;
-
-// Hero
-var hero;
-
-// Enemies
-var bomber1;
-var bomber2;
-var tracker;
-var boss;
-
-// VelocityX
-var bomberVelocityX = 75;
-var trackerVelocityX = 200;
-var bossVelocityX = 125;
-
 var playState = {
 
     create: function () {
-
+        console.log('begin create play');
+        /**************************************************
+         * Init
+         *************************************************/
         // Global Variables
         game.global.score = 0;
+        // Texts
+        this.countdownDisplay = 60;
+        this.countdownString = 'Countdown : ';
+        this.scoreString = 'Score : ';
+        this.levelString = 'Level : ';
+        // Level
+        this.level = 1;
+// VelocityX
+        this.bomberVelocityX = 75;
+        this.trackerVelocityX = 200;
+        this.bossVelocityX = 125;
+
 
         // Start gamepad
         game.input.gamepad.start();
@@ -44,19 +29,20 @@ var playState = {
         pad.getButton(Phaser.Gamepad.XBOX360_A).onDown.add(this.onDown360Play, this);
 
         // The countdown and the level
-        game.time.events.repeat(Phaser.Timer.SECOND, 60, this.countDown, this);
-        countdownText = game.add.text(200, 0, countdownString + countdownDisplay, {fontSize: '18px', fill: '#fff'});
-        levelText = game.add.text(420, 0, levelString + level, {fontSize: '18px', fill: '#fff'});
+        this.timerCountDownGame = game.time.events.repeat(Phaser.Timer.SECOND, 60, this.countDown, this);
+        this.countdownText = game.add.text(200, 0, this.countdownString + this.countdownDisplay, {fontSize: '18px', fill: '#fff'});
+        this.levelText = game.add.text(420, 0, this.levelString +this. level, {fontSize: '18px', fill: '#fff'});
 
         // The score
-        scoreText = game.add.text(5, 0, scoreString + game.global.score, {fontSize: '18px', fill: '#fff'});
+        this.scoreText = game.add.text(5, 0, this.scoreString + game.global.score, {fontSize: '18px', fill: '#fff'});
 
 
         // Hero
-        hero = game.add.sprite(game.world.centerX, 470, 'hero');
-        hero.anchor.setTo(0.5, 0.5);
-        hero.frame = 1;
-        game.time.events.repeat(Phaser.Timer.SECOND * 0.18, 3, this.heroFlashes, this);
+        console.log('create hero');
+        this.hero = game.add.sprite(game.world.centerX, 470, 'hero');
+        this.hero.anchor.setTo(0.5, 0.5);
+        this.hero.frame = 1;
+        this.timerHeroFlashes = game.time.events.repeat(Phaser.Timer.SECOND * 0.18, 3, this.heroFlashes, this);
 
         // Create the hero-bullet group
         this.heroBullets = game.add.group();
@@ -64,49 +50,59 @@ var playState = {
         this.heroBullets.createMultiple(18, 'hero-bullet');
 
         // Create Bomber 1
-        bomber1 = this.createBomber(bomber1, bomber1, 145);
+        this.bomber1 = this.createBomber(this.bomber1, 'bomber1', 145);
+        console.log('bomber1 created');
         // Create Bomber 2
-        bomber2 = this.createBomber(bomber2, bomber2, 195);
+        this.bomber2 = this.createBomber(this.bomber2, 'bomber2', 195);
+        console.log('bomber2 created');
 
         // Create Tracker
-        tracker = this.createTracker();
+        console.log('before tracker create');
+        this.createTracker();
+        console.log('tracker created');
 
         // Create Boss
-        boss = this.createBoss();
+        console.log('before boss create');
+        this.createBoss();
+        console.log('boss created');
 
 
         // Launch Bomber 1
-        this.launchBomber(bomber1);
-        game.time.events.repeat(Phaser.Timer.SECOND / 4, 240, this.relaunchBomber, this);
+        this.launchBomber(this.bomber1);
+        this.timerBombersGenerator = game.time.events.repeat(Phaser.Timer.SECOND / 4, 250, this.relaunchBomber, this);
+        //this.timerBombersGenerator.start();
 
-        game.time.events.repeat(Phaser.Timer.SECOND / 4, 240, this.relaunchTracker, this);
+        this.timerTrackerGenerator = game.time.events.repeat(Phaser.Timer.SECOND / 4, 250, this.relaunchTracker, this);
+        //this.timerTrackerGenerator.start();
 
+        console.log('end create play');
     },
 
     update: function () {
 
         // Moves the Hero
         if (pad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1) {
-            if (hero.x > 25) {
-                hero.x -= 3;
+            if (this.hero.x > 25) {
+                this.hero.x -= 3;
             }
         }
         else if (pad.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) > 0.1) {
-            if (hero.x < 475) {
-                hero.x += 3;
+            if (this.hero.x < 475) {
+                this.hero.x += 3;
             }
         }
 
-        this.updateBomber(bomber1);
+        this.updateBomber(this.bomber1);
 
-        if (level > 1) {
-            this.updateBomber(bomber2);
+        if (this.level > 1) {
+            this.updateBomber(this.bomber2);
+            game.state.start('gamerOver');
         }
-        if(level > 2){
+        if (this.level > 2) {
             this.updateTracker();
         }
-        if(level>3){
-            if(boss.health === 0){
+        if (this.level > 3) {
+            if (this.boss.health === 0) {
                 this.launchBoss();
             }
             this.updateBoss();
@@ -116,10 +112,10 @@ var playState = {
     },
     heroFlashes: function () {
 
-        if (hero.frame === 0) {
-            hero.frame = 1;
+        if (this.hero.frame === 0) {
+            this.hero.frame = 1;
         } else {
-            hero.frame = 0;
+            this.hero.frame = 0;
         }
 
     },
@@ -133,7 +129,7 @@ var playState = {
 
         // Init the bullet
         bullet.anchor.setTo(0.5, 1);
-        bullet.reset(hero.x, hero.y - hero.height / 2);
+        bullet.reset(this.hero.x, this.hero.y - this.hero.height / 2);
         bullet.body.velocity.y = -400;
 
         // Kill the bullet when out of the world
@@ -171,22 +167,22 @@ var playState = {
         // The starting position of the bomber and consequently his moving direction
         if (lr > 50) {
             varBomber.x = -60;
-            varBomber.body.velocity.x = bomberVelocityX;
+            varBomber.body.velocity.x = this.bomberVelocityX;
         } else {
             varBomber.x = 560;
-            varBomber.body.velocity.x = -bomberVelocityX;
+            varBomber.body.velocity.x = -this.bomberVelocityX;
         }
 
     },
     relaunchBomber: function () {
 
-        if (bomber1.health === 0) {
+        if (this.bomber1.health === 0) {
 
-            this.launchBomber(bomber1);
+            this.launchBomber(this.bomber1);
         }
-        if (bomber2.health === 0 && level > 1) {
+        if (this.bomber2.health === 0 && this.level > 1) {
 
-            this.launchBomber(bomber2);
+            this.launchBomber(this.bomber2);
         }
     },
     updateBomber: function (varBomber) {
@@ -217,18 +213,18 @@ var playState = {
          */
 
         //this.fireRaysTimer = game.time.now;
-        tracker = game.add.sprite(520, 260, 'tracker');
-        tracker.anchor.setTo(0.5, 0.5);
-        tracker.alive = true;
-        tracker.health=0;
-        game.physics.arcade.enable(tracker);
-        tracker.enableBody = true;
-        tracker.name = 'tracker';
+        this.tracker = game.add.sprite(520, 260, 'tracker');
+        this.tracker.anchor.setTo(0.5, 0.5);
+        this.tracker.alive = true;
+        this.tracker.health = 0;
+        this.game.physics.arcade.enable(this.tracker);
+        this.tracker.enableBody = true;
+        this.tracker.name = 'tracker';
         //this.tracker.heroDetectedByTracker = false;
-        return tracker;
+        //return this.tracker;
     },
     launchTracker: function () {
-        tracker.health = 1;
+        this.tracker.health = 1;
         // var
         var lr;
 
@@ -236,30 +232,30 @@ var playState = {
         lr = game.rnd.integerInRange(1, 100);
         // The starting position of the bomber and consequently his moving direction
         if (lr > 50) {
-            tracker.x = -40;
-            tracker.body.velocity.x = trackerVelocityX;
+            this.tracker.x = -40;
+            this.tracker.body.velocity.x = this.trackerVelocityX;
         } else {
-            tracker.x = 540;
-            tracker.body.velocity.x = -trackerVelocityX;
+            this.tracker.x = 540;
+            this.tracker.body.velocity.x = -this.trackerVelocityX;
         }
 
     },
     relaunchTracker: function () {
 
-        if (tracker.health === 0 && level > 2) {
+        if (this.tracker.health === 0 && this.level > 2) {
             this.launchTracker();
         }
 
     },
     updateTracker: function () {
-        if (tracker.health === 1) {
-            var posX = tracker.x;
+        if (this.tracker.health === 1) {
+            var posX = this.tracker.x;
             // Moves the tracker
             if (posX < 25) {
-                tracker.body.velocity.x = trackerVelocityX;
+                this.tracker.body.velocity.x = this.trackerVelocityX;
             }
             if (posX > 475) {
-                tracker.body.velocity.x = -trackerVelocityX;
+                this.tracker.body.velocity.x = -this.trackerVelocityX;
             }
         }
     },
@@ -281,19 +277,19 @@ var playState = {
          this.moveX = -boss1Move;
          }
          */
-        boss = game.add.sprite(560, 75, 'boss');
-        boss.anchor.setTo(0.5, 0.5);
-        boss.health = 0;
-        boss.alive = true;
-        game.physics.arcade.enable(boss);
+        this.boss = game.add.sprite(560, 75, 'boss');
+        this.boss.anchor.setTo(0.5, 0.5);
+        this.boss.health = 0;
+        this.boss.alive = true;
+        game.physics.arcade.enable(this.boss);
         //boss.fireRayTimer = game.time.now;
 
         //this.game.physics.arcade.enable(this.boss1);
-        boss.name = 'boss';
-        return boss;
+        this.boss.name = 'boss';
+        //return this.boss;
     },
     launchBoss: function () {
-        boss.health = 5;
+        this.boss.health = 5;
         // var
         var lr;
 
@@ -301,11 +297,11 @@ var playState = {
         lr = game.rnd.integerInRange(1, 100);
         // The starting position of the bomber and consequently his moving direction
         if (lr > 50) {
-            boss.x = -60;
-            boss.body.velocity.x = trackerVelocityX;
+            this.boss.x = -60;
+            this.boss.body.velocity.x = this.bossVelocityX;
         } else {
-            boss.x = 560;
-            boss.body.velocity.x = -trackerVelocityX;
+            this.boss.x = 560;
+            this.boss.body.velocity.x = -this.bossVelocityX;
         }
 
     },
@@ -314,27 +310,35 @@ var playState = {
         var posX = boss.x;
         // Moves the boss
         if (posX < 65) {
-            boss.body.velocity.x = bossVelocityX;
+            this.boss.body.velocity.x = this.bossVelocityX;
         }
         if (posX > 435) {
-            boss.body.velocity.x = -bossVelocityX;
+            this.boss.body.velocity.x = -this.bossVelocityX;
         }
     },
     countDown: function () {
-        countdownDisplay -= 1;
-        countdownText.setText(countdownString + countdownDisplay);
-        switch (countdownDisplay) {
+        this.countdownDisplay -= 1;
+        this.countdownText.setText(this.countdownString + this.countdownDisplay);
+        switch (this.countdownDisplay) {
             case 45:
-                level = 2;
+                this.level = 2;
                 break;
             case 30:
-                level = 3;
+                this.level = 3;
                 break;
             case 15:
-                level = 4;
+                this.level = 4;
                 break;
         }
-        levelText.setText(levelString + level);
+        this.levelText.setText(this.levelString + this.level);
+    },
+    shutdown: function () {
+        this.hero.destroy();
+        this.timerHeroFlashes.timer.removeAll();
+        this.timerCountDownGame.timer.removeAll();
+        this.timerBombersGenerator.timer.removeAll();
+        this.timerTrackerGenerator.timer.removeAll();
+
     }
 
 };
