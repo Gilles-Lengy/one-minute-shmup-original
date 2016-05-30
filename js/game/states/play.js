@@ -14,9 +14,11 @@ var playState = {
         this.levelString = 'Level : ';
         // Level
         this.level = 1;
-// VelocityX
+        // PosXXXX VelocityYYYYY
         this.bomberVelocityX = 75;
+        this.trackerPosY = 260;
         this.trackerVelocityX = 200;
+        this.trackerVelocityY = 1111;
         this.bossVelocityX = 125;
 
 
@@ -30,8 +32,11 @@ var playState = {
 
         // The countdown and the level
         this.timerCountDownGame = game.time.events.repeat(Phaser.Timer.SECOND, 60, this.countDown, this);
-        this.countdownText = game.add.text(200, 0, this.countdownString + this.countdownDisplay, {fontSize: '18px', fill: '#fff'});
-        this.levelText = game.add.text(420, 0, this.levelString +this. level, {fontSize: '18px', fill: '#fff'});
+        this.countdownText = game.add.text(200, 0, this.countdownString + this.countdownDisplay, {
+            fontSize: '18px',
+            fill: '#fff'
+        });
+        this.levelText = game.add.text(420, 0, this.levelString + this.level, {fontSize: '18px', fill: '#fff'});
 
         // The score
         this.scoreText = game.add.text(5, 0, this.scoreString + game.global.score, {fontSize: '18px', fill: '#fff'});
@@ -101,6 +106,7 @@ var playState = {
         }
         if (this.level > 2) {
             this.updateTracker();
+            this.relaunchTracker();
         }
         if (this.level > 3) {
             if (this.boss.health === 0) {
@@ -108,8 +114,6 @@ var playState = {
             }
             this.updateBoss();
         }
-
-
 
 
     },
@@ -216,18 +220,26 @@ var playState = {
          */
 
         //this.fireRaysTimer = game.time.now;
-        this.tracker = game.add.sprite(520, 260, 'tracker');
+        this.tracker = game.add.sprite(520, this.trackerPosY, 'tracker');
         this.tracker.anchor.setTo(0.5, 0.5);
         this.tracker.alive = true;
         this.tracker.health = 0;
         this.game.physics.arcade.enable(this.tracker);
         this.tracker.enableBody = true;
         this.tracker.name = 'tracker';
-        //this.tracker.heroDetectedByTracker = false;
+
+        this.tracker.heroDetectedByTracker = false;
+
         //return this.tracker;
     },
     launchTracker: function () {
+
+        this.tracker.body.velocity.y = 0;
+        this.tracker.body.y = this.trackerPosY;
         this.tracker.health = 1;
+        this.tracker.heroDetectedByTracker = false;
+
+
         // var
         var lr;
 
@@ -260,6 +272,22 @@ var playState = {
             if (posX > 475) {
                 this.tracker.body.velocity.x = -this.trackerVelocityX;
             }
+
+            // Detect if the hero is near below
+            if (this.hero.x > posX - 40 && this.hero.x < posX + 120 && !this.tracker.heroDetectedByTracker) {
+                var yTrackerGoDownFactor = this.game.rnd.integerInRange(1, 100000);
+                if (yTrackerGoDownFactor < 2000) {// Go down
+                    this.tracker.body.velocity.x = 0;
+                    this.tracker.body.velocity.y = this.trackerVelocityY;
+                    this.tracker.heroDetectedByTracker = true;
+                }
+            }
+
+            // Kill tracker if out of game area
+            if (this.tracker.y > 540) {
+                this.tracker.health = 0;
+            }
+            console.log(this.tracker.health + '/' + this.tracker.x + '/' + this.tracker.x)
         }
     },
     createBoss: function () {
@@ -335,7 +363,7 @@ var playState = {
         }
         this.levelText.setText(this.levelString + this.level);
     },
-    gameCompleted: function(){
+    gameCompleted: function () {
         game.state.start('gamerOver');
     },
     shutdown: function () {
