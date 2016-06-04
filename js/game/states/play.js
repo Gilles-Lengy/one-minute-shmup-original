@@ -37,6 +37,11 @@ var playState = {
         this.fireTrackerRaysRef = 95;
         this.fireTrackerRaysTimerDelta = 100;
         this.fireTrackerRaysVelocitY = 555;
+        // Boss Ray
+        this.fireRayBossFactorMax = 100;
+        this.fireRayBossFactorRef = 98;
+        this.firebossRayTimerDelta = 222;
+        this.bossRayMoveY = 200;
 
 
         // Start gamepad
@@ -96,6 +101,15 @@ var playState = {
         this.enemyTrackerRayss.createMultiple(30, 'trackerRay');
         this.enemyTrackerRayss.setAll('checkWorldBounds', true);
         this.enemyTrackerRayss.setAll('outOfBoundsKill', true);
+
+        // The Boss's Rays
+        this.enemybossRays = game.add.group();
+        this.enemybossRays.enableBody = true;
+        this.enemybossRays.physicsBodyType = Phaser.Physics.ARCADE;
+        this. enemybossRays.createMultiple(30, 'bossRay');
+        this.enemybossRays.setAll('checkWorldBounds', true);
+        this.enemybossRays.setAll('outOfBoundsKill', true);
+
 
 
         // Create Bomber 1
@@ -427,10 +441,10 @@ var playState = {
          y = 25;
          if (lr > 50) {
          var x = -60;
-         this.moveX = boss1Move;
+         this.moveX = BossMove;
          } else {
          var x = 560;
-         this.moveX = -boss1Move;
+         this.moveX = -BossMove;
          }
          */
         this.boss = game.add.sprite(560, 75, 'boss');
@@ -438,9 +452,9 @@ var playState = {
         this.boss.health = 0;
         this.boss.alive = true;
         game.physics.arcade.enable(this.boss);
-        //boss.fireRayTimer = game.time.now;
+        this.boss.fireRayTimer = game.time.now;
 
-        //this.game.physics.arcade.enable(this.boss1);
+        //this.game.physics.arcade.enable(this.Boss);
         this.boss.name = 'boss';
         //return this.boss;
     },
@@ -471,7 +485,33 @@ var playState = {
         if (posX > 435) {
             this.boss.body.velocity.x = -this.bossVelocityX;
         }
+        // Boss fire
+        this.firesRayBoss();
     },
+    firesRayBoss: function() {
+    //  To avoid them being allowed to fire too fast we set a time limit
+    if (game.time.now > this.boss.fireRayTimer)
+    {
+        //  Grab the first bullet we can from the pool
+        var bossRay = this.enemybossRays.getFirstDead();
+        if (!bossRay) {
+            return;
+        }
+        // Determinate the fireRayFactor
+        var fireRayFactor = this.game.rnd.integerInRange(1, this.fireRayBossFactorMax);
+        if (bossRay && fireRayFactor > this.fireRayBossFactorRef)
+        {
+            //  And fire it
+            bossRay.reset(this.boss.x + 4, this.boss.y + 22);
+            bossRay.loadTexture('bossRay', 0);
+            bossRay.animations.add('blink');
+            bossRay.animations.play('blink', 8, true);
+            bossRay.body.velocity.y = this.bossRayMoveY;
+            this.fireRayTimer = game.time.now + this.firebossRayTimerDelta;
+            console.log(this.fireRayTimer);
+        }
+    }
+}, //firesRayBoss
     countDown: function () {
         this.countdownDisplay -= 1;
         this.countdownText.setText(this.countdownString + this.countdownDisplay);
