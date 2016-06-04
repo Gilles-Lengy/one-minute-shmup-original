@@ -529,7 +529,7 @@ var playState = {
         game.state.start('gamerOver');
     },
     shutdown: function () {
-        
+
         // Ships
         this.hero.destroy();
 
@@ -544,7 +544,6 @@ var playState = {
         this.heroBullets.destroy();
         this.enemyBombs.destroy();
         this.enemyBomberRays.destroy();
-        this.enemyTrackerRayss.destroy();
         this.enemyTrackerRayss.destroy();
         this.enemybossRays.destroy();
 
