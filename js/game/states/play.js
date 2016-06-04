@@ -15,6 +15,7 @@ var playState = {
         // Level
         this.level = 1;
         // PosXXXX VelocityYYYYY
+        this.heroBulletVelocityY = -400;
         this.bomberVelocityX = 75;
         this.trackerPosY = 260;
         this.trackerVelocityX = 200;
@@ -53,6 +54,9 @@ var playState = {
         this.heroBullets = game.add.group();
         this.heroBullets.enableBody = true;
         this.heroBullets.createMultiple(18, 'hero-bullet');
+        this.heroBullets.setAll('checkWorldBounds', true);
+        this.heroBullets.setAll('outOfBoundsKill', true);// The bombers's Bombs
+
 
         // Create Bomber 1
         this.bomber1 = this.createBomber(this.bomber1, 'bomber1', 145);
@@ -137,11 +141,8 @@ var playState = {
         // Init the bullet
         bullet.anchor.setTo(0.5, 1);
         bullet.reset(this.hero.x, this.hero.y - this.hero.height / 2);
-        bullet.body.velocity.y = -400;
+        bullet.body.velocity.y = this.heroBulletVelocityY;
 
-        // Kill the bullet when out of the world
-        bullet.checkWorldBounds = true;
-        bullet.outOfBoundsKill = true;
     },
     onDown360Play: function (button) {
         //console.log('onDown360 Play');
