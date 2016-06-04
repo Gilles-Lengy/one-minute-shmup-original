@@ -21,6 +21,11 @@ var playState = {
         this.trackerVelocityX = 200;
         this.trackerVelocityY = 1111;
         this.bossVelocityX = 125;
+        // Bombs variables
+        this.dropBombFactorMax = 100;
+        this.dropBombFactorRef = 98; // Drop the bomb if 1->dropBombFactorMax > dropBombFactorRef
+        this.dropBombTimerDelta = 300; // Drop a bomb tested every dropBombTimerDelta ms...
+        this.bombVelocitY = 80;
 
 
         // Start gamepad
@@ -55,7 +60,16 @@ var playState = {
         this.heroBullets.enableBody = true;
         this.heroBullets.createMultiple(18, 'hero-bullet');
         this.heroBullets.setAll('checkWorldBounds', true);
-        this.heroBullets.setAll('outOfBoundsKill', true);// The bombers's Bombs
+        this.heroBullets.setAll('outOfBoundsKill', true);
+
+        // Create the bombers's Bombs
+        this.enemyBombs = game.add.group();
+        this.enemyBombs.enableBody = true;
+        this.enemyBombs.physicsBodyType = Phaser.Physics.ARCADE;
+        this.enemyBombs.createMultiple(30, 'bomb1');
+        this.enemyBombs.setAll('checkWorldBounds', true);
+        this.enemyBombs.setAll('outOfBoundsKill', true);
+
 
 
         // Create Bomber 1
@@ -155,7 +169,7 @@ var playState = {
         varBomber.anchor.setTo(0.5, 0.5);
         varBomber.alive = true;
         varBomber.health = 0;
-        //this.dropBombTimer = game.time.now;
+        varBomber.dropBombTimer = game.time.now;
         //this.fireRayTimer = game.time.now;
         game.physics.arcade.enable(varBomber);
         varBomber.enableBody = true;
@@ -198,7 +212,33 @@ var playState = {
         if (varBomber.x < -60 || varBomber.x > 560) {
             varBomber.health = 0;
         }
+        if(varBomber.health > 0){
+            this.dropsBomb(varBomber);
+        }
     },
+    dropsBomb: function(varBomber) {
+    //  To avoid them being allowed to fire too fast we set a time limit
+    if (game.time.now > varBomber.dropBombTimer)
+    {
+        //  Grab the first bullet we can from the pool
+        var enemyBomb = this.enemyBombs.getFirstDead();
+        if (!enemyBomb) {
+            return;
+        }
+        // Determinate the dropBombFactor
+        var dropBombFactor = this.game.rnd.integerInRange(1, this.dropBombFactorMax);
+        if (enemyBomb && dropBombFactor > this.dropBombFactorRef)
+        {
+            //  And fire it
+            enemyBomb.anchor.setTo(0.5,0.5);
+            enemyBomb.reset(varBomber.x, varBomber.y + varBomber.width/2);
+            enemyBomb.animations.frame = 0; // Set to the first frame otherwise, the last frame is displayed when the bomb 'respawn'
+            enemyBomb.body.velocity.y = this.bombVelocitY;
+            enemyBomb.alive = true;
+            varBomber.dropBombTimer = game.time.now + this.dropBombTimerDelta;
+        }
+    }
+}, //dropsBomb
     createTracker: function () {
         // var
         //var lr;
