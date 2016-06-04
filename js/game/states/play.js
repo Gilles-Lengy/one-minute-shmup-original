@@ -130,11 +130,12 @@ var playState = {
 
 
         // Launch Bomber 1
-        this.launchBomber(this.bomber1);
-        this.timerBombersGenerator = game.time.events.repeat(Phaser.Timer.SECOND / 4, 250, this.relaunchBomber, this);
+        //this.launchBomber(this.bomber1);
+
+        //this.timerBombersGenerator = game.time.events.repeat(Phaser.Timer.SECOND / 4, 250, this.relaunchBomber, this);
         //this.timerBombersGenerator.start();
 
-        this.timerTrackerGenerator = game.time.events.repeat(Phaser.Timer.SECOND / 4, 250, this.relaunchTracker, this);
+        //this.timerTrackerGenerator = game.time.events.repeat(Phaser.Timer.SECOND / 4, 250, this.relaunchTracker, this);
         //this.timerTrackerGenerator.start();
 
         this.timerGameCompleted = game.time.events.add(Phaser.Timer.MINUTE, this.gameCompleted, this);
@@ -237,8 +238,11 @@ var playState = {
         }
 
     },
-    relaunchBomber: function () {
-
+    updateBomber: function (varBomber) {
+        // If varBomber out of game area
+        if (varBomber.x < -60 || varBomber.x > 560) {
+            varBomber.health = 0;
+        }
         if (this.bomber1.health === 0) {
 
             this.launchBomber(this.bomber1);
@@ -247,15 +251,10 @@ var playState = {
 
             this.launchBomber(this.bomber2);
         }
-    },
-    updateBomber: function (varBomber) {
-        // alive false if varBomber out of game area
-        if (varBomber.x < -60 || varBomber.x > 560) {
-            varBomber.health = 0;
-        }
         if (varBomber.health > 0) {
             this.dropsBomb(varBomber);
         }
+
     },
     dropsBomb: function (varBomber) {
         //  To avoid them being allowed to fire too fast we set a time limit
@@ -537,8 +536,6 @@ var playState = {
         this.timerGameCompleted.timer.removeAll();
         this.timerHeroFlashes.timer.removeAll();
         this.timerCountDownGame.timer.removeAll();
-        this.timerBombersGenerator.timer.removeAll();
-        this.timerTrackerGenerator.timer.removeAll();
 
         // Groups
         this.heroBullets.destroy();
