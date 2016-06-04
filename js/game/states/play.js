@@ -24,7 +24,6 @@ var playState = {
         // Bombs variables
         this.dropBombFactorMax = 100;
         this.dropBombFactorRef = 98; // Drop the bomb if 1->dropBombFactorMax > dropBombFactorRef
-        this.dropBombTimerDelta = 300; // Drop a bomb tested every dropBombTimerDelta ms...
         this.bombVelocitY = 80;
         // Bombers rays
         this.fireBomberRayTimerDelta = 200;
@@ -42,6 +41,8 @@ var playState = {
         this.fireRayBossFactorRef = 98;
         this.firebossRayTimerDelta = 222;
         this.bossRayMoveY = 200;
+        // Scoring
+        this.bombScore = 1;
 
 
         // Start gamepad
@@ -144,6 +145,9 @@ var playState = {
     },
 
     update: function () {
+
+        // Handle all the collisions
+        game.physics.arcade.overlap(this.heroBullets, this.enemyBombs, this.heroBulletHitsEnemyBomb, null, this);
 
         // Moves the Hero
         if (pad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1) {
@@ -273,7 +277,7 @@ var playState = {
                 enemyBomb.animations.frame = 0; // Set to the first frame otherwise, the last frame is displayed when the bomb 'respawn'
                 enemyBomb.body.velocity.y = this.bombVelocitY;
                 enemyBomb.alive = true;
-                varBomber.dropBombTimer = game.time.now + this.dropBombTimerDelta;
+                enemyBomb.health = 1;
             }
         }
     }, //dropsBomb
@@ -523,6 +527,18 @@ var playState = {
                 break;
         }
         this.levelText.setText(this.levelString + this.level);
+    },
+    heroBulletHitsEnemyBomb: function (heroBullet, enemyBomb) {
+        heroBullet.kill();
+
+
+        if (enemyBomb.health > 0) {
+            game.global.score += this.bombScore;
+            this.scoreText.setText(this.scoreString + game.global.score);
+            enemyBomb.health = 0;
+            enemyBomb.animations.add('bomb1Explode1');
+            enemyBomb.animations.play('bomb1Explode1', 9, false, true);
+        }
     },
     gameCompleted: function () {
         game.state.start('gamerOver');
