@@ -278,6 +278,7 @@ var playState = {
                 enemyBomb.body.velocity.y = this.bombVelocitY;
                 enemyBomb.alive = true;
                 enemyBomb.health = 1;
+                enemyBomb.dropBombTimer = game.time.now + this.fireBomberRayTimerDelta;
             }
         }
     }, //dropsBomb
