@@ -43,6 +43,7 @@ var playState = {
         this.bossRayMoveY = 200;
         // Scoring
         this.bombScore = 1;
+        this.enemyBomberRayScore = 3;
 
 
         // Start gamepad
@@ -148,6 +149,8 @@ var playState = {
 
         // Handle all the collisions
         game.physics.arcade.overlap(this.heroBullets, this.enemyBombs, this.heroBulletHitsEnemyBomb, null, this);
+        game.physics.arcade.overlap(this.heroBullets, this.enemyBomberRays, this.heroBulletHitsEnemyBomberRays, null, this);
+
 
         // Moves the Hero
         if (pad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1) {
@@ -535,13 +538,21 @@ var playState = {
 
         if (enemyBomb.health > 0) {
             this.scored(this.bombScore);
-            this.scoreText.setText(this.scoreString + game.global.score);
             enemyBomb.health = 0;
             enemyBomb.animations.add('bomb1Explode1');
             enemyBomb.animations.play('bomb1Explode1', 9, false, true);
         }
     },
-    scored: function(score){
+    heroBulletHitsEnemyBomberRays: function (heroBullet, enemyBomberRay) {
+
+        heroBullet.kill();
+        enemyBomberRay.kill();
+        this.scored(this.enemyBomberRayScore);
+        console.log('bomber ray hitted');
+
+    },//heroBulletHitsEnemyBomberRays
+
+    scored: function (score) {
         game.global.score += score;
         this.scoreText.setText(this.scoreString + game.global.score);
     },
