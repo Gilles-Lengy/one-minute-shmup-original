@@ -17,7 +17,8 @@ var loadState = {
 
         // Load all image assets
         game.load.image('hero-bullet', 'assets/images/bullet-hero-1.png');
-        
+        game.load.image('trackerRay', 'assets/images/enemy-tracker-1-ray.png');
+
         // Load all sprites assets
         game.load.spritesheet('hero', 'assets/images/hero-hitted-and-damaged.png', 40, 40);
         game.load.spritesheet('bomber', 'assets/images/enemy-bomber-1.png', 60, 40, 3);

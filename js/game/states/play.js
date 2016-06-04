@@ -32,6 +32,11 @@ var playState = {
         this.fireBomberRayFactorMax = 100;
         this.fireBomberRayFactorRef = 95;
         this.fireBomberRayTimerDelta = 200;
+        // Tracker rays
+        this.fireTrackerRaysFactorMax = 100;
+        this.fireTrackerRaysRef = 95;
+        this.fireTrackerRaysTimerDelta = 100;
+        this.fireTrackerRaysVelocitY = 555;
 
 
         // Start gamepad
@@ -84,6 +89,13 @@ var playState = {
         this.enemyBomberRays.setAll('checkWorldBounds', true);
         this.enemyBomberRays.setAll('outOfBoundsKill', true);
 
+        // The Tracker's Rays
+        this.enemyTrackerRayss = game.add.group();
+        this.enemyTrackerRayss.enableBody = true;
+        this.enemyTrackerRayss.physicsBodyType = Phaser.Physics.ARCADE;
+        this.enemyTrackerRayss.createMultiple(30, 'trackerRay');
+        this.enemyTrackerRayss.setAll('checkWorldBounds', true);
+        this.enemyTrackerRayss.setAll('outOfBoundsKill', true);
 
 
         // Create Bomber 1
@@ -228,65 +240,60 @@ var playState = {
         if (varBomber.x < -60 || varBomber.x > 560) {
             varBomber.health = 0;
         }
-        if(varBomber.health > 0){
+        if (varBomber.health > 0) {
             this.dropsBomb(varBomber);
         }
     },
-    dropsBomb: function(varBomber) {
-    //  To avoid them being allowed to fire too fast we set a time limit
-    if (game.time.now > varBomber.dropBombTimer)
-    {
-        //  Grab the first bullet we can from the pool
-        var enemyBomb = this.enemyBombs.getFirstDead();
-        if (!enemyBomb) {
-            return;
-        }
-        // Determinate the dropBombFactor
-        var dropBombFactor = this.game.rnd.integerInRange(1, this.dropBombFactorMax);
-        if (enemyBomb && dropBombFactor > this.dropBombFactorRef)
-        {
-            //  And fire it
-            enemyBomb.anchor.setTo(0.5,0.5);
-            enemyBomb.reset(varBomber.x, varBomber.y + varBomber.width/2);
-            enemyBomb.animations.frame = 0; // Set to the first frame otherwise, the last frame is displayed when the bomb 'respawn'
-            enemyBomb.body.velocity.y = this.bombVelocitY;
-            enemyBomb.alive = true;
-            varBomber.dropBombTimer = game.time.now + this.dropBombTimerDelta;
-        }
-    }
-}, //dropsBomb
-    bomberFiresRay: function(varBomber) {
-    //  To avoid them being allowed to fire too fast we set a time limit
-    if (game.time.now > varBomber.fireRayTimer)
-    {
-        //  Grab the first bullet we can from the pool
-       var enemyBomberRay = this.enemyBomberRays.getFirstDead();
-        if (!enemyBomberRay) {
-            return;
-        }
-        // Determinate the fire ray Factor
-        var fireBomberRayFactor = this.game.rnd.integerInRange(1, this.fireBomberRayFactorMax);
-        if (enemyBomberRay && fireBomberRayFactor > this.fireBomberRayFactorRef)
-        {
-            // Determinate if the bomber fires on the Left or on the Right
-            var lr = this.game.rnd.integerInRange(1, 100);
-            var bomderDeltaRayX;
-            if (lr > 50) {
-                bomderDeltaRayX = -27;
-            } else {
-                bomderDeltaRayX = 27;
+    dropsBomb: function (varBomber) {
+        //  To avoid them being allowed to fire too fast we set a time limit
+        if (game.time.now > varBomber.dropBombTimer) {
+            //  Grab the first bullet we can from the pool
+            var enemyBomb = this.enemyBombs.getFirstDead();
+            if (!enemyBomb) {
+                return;
             }
-            // Determinate the color of the ray
-            var cr = this.game.rnd.integerInRange(0, 2); // the sprite as 3 frames, one for each color
-            enemyBomberRay.frame = cr;
-            //  And fire it
-            enemyBomberRay.anchor.setTo(0.5,0.5);
-            enemyBomberRay.reset(varBomber.x + bomderDeltaRayX, varBomber.y + 25);
-            enemyBomberRay.body.velocity.y = this.enemyBomberRayVelocitY;
-            varBomber.fireRayTimer = game.time.now + this.fireBomberRayTimerDelta;
+            // Determinate the dropBombFactor
+            var dropBombFactor = this.game.rnd.integerInRange(1, this.dropBombFactorMax);
+            if (enemyBomb && dropBombFactor > this.dropBombFactorRef) {
+                //  And fire it
+                enemyBomb.anchor.setTo(0.5, 0.5);
+                enemyBomb.reset(varBomber.x, varBomber.y + varBomber.width / 2);
+                enemyBomb.animations.frame = 0; // Set to the first frame otherwise, the last frame is displayed when the bomb 'respawn'
+                enemyBomb.body.velocity.y = this.bombVelocitY;
+                enemyBomb.alive = true;
+                varBomber.dropBombTimer = game.time.now + this.dropBombTimerDelta;
+            }
         }
-    }
-}, //firesRay
+    }, //dropsBomb
+    bomberFiresRay: function (varBomber) {
+        //  To avoid them being allowed to fire too fast we set a time limit
+        if (game.time.now > varBomber.fireRayTimer) {
+            //  Grab the first bullet we can from the pool
+            var enemyBomberRay = this.enemyBomberRays.getFirstDead();
+            if (!enemyBomberRay) {
+                return;
+            }
+            // Determinate the fire ray Factor
+            var fireBomberRayFactor = this.game.rnd.integerInRange(1, this.fireBomberRayFactorMax);
+            if (enemyBomberRay && fireBomberRayFactor > this.fireBomberRayFactorRef) {
+                // Determinate if the bomber fires on the Left or on the Right
+                var lr = this.game.rnd.integerInRange(1, 100);
+                var bomderDeltaRayX;
+                if (lr > 50) {
+                    bomderDeltaRayX = -27;
+                } else {
+                    bomderDeltaRayX = 27;
+                }
+                // Determinate the color of the ray
+                enemyBomberRay.frame = this.game.rnd.integerInRange(0, 2); // the sprite as 3 frames, one for each color
+                //  And fire it
+                enemyBomberRay.anchor.setTo(0.5, 0.5);
+                enemyBomberRay.reset(varBomber.x + bomderDeltaRayX, varBomber.y + 25);
+                enemyBomberRay.body.velocity.y = this.enemyBomberRayVelocitY;
+                varBomber.fireRayTimer = game.time.now + this.fireBomberRayTimerDelta;
+            }
+        }
+    }, //firesRay
     createTracker: function () {
         // var
         //var lr;
@@ -313,6 +320,7 @@ var playState = {
         this.tracker.anchor.setTo(0.5, 0.5);
         this.tracker.alive = true;
         this.tracker.health = 0;
+        this.fireRaysTimer = game.time.now;
         this.game.physics.arcade.enable(this.tracker);
         this.tracker.enableBody = true;
         this.tracker.name = 'tracker';
@@ -376,9 +384,37 @@ var playState = {
             if (this.tracker.y > 540) {
                 this.tracker.health = 0;
             }
-            console.log(this.tracker.health + '/' + this.tracker.x + '/' + this.tracker.x)
+           // console.log(this.tracker.health + '/' + this.tracker.x + '/' + this.tracker.x)
+            this.trackerFiresRays();
         }
     },
+    trackerFiresRays: function () {
+        //  To avoid them being allowed to fire too fast we set a time limit
+        if (game.time.now > this.fireRaysTimer) {
+            // Determinate the dropBombFactor
+            var fireTrackerRaysFactor = this.game.rnd.integerInRange(1, this.fireTrackerRaysFactorMax);
+            //  Grab the first bullet we can from the pool
+            var enemyTrackerRay1 = this.enemyTrackerRayss.getFirstDead();
+            if (!enemyTrackerRay1) {
+                return;
+            }
+            if (enemyTrackerRay1 && fireTrackerRaysFactor > this.fireTrackerRaysRef) {
+                //  And fire it
+                enemyTrackerRay1.name = 'enemyTrackerRay';
+                enemyTrackerRay1.reset(this.tracker.x - 18, this.tracker.y + 18);
+                enemyTrackerRay1.body.velocity.y = this.fireTrackerRaysVelocitY;
+            }
+            var enemyTrackerRay2 = this.enemyTrackerRayss.getFirstExists(false);
+            if (enemyTrackerRay2 && fireTrackerRaysFactor > this.fireTrackerRaysRef) {
+                //  And fire it
+                enemyTrackerRay2.name = 'enemyTrackerRay';
+                enemyTrackerRay2.reset(this.tracker.x + 18, this.tracker.y + 18);
+                enemyTrackerRay2.body.velocity.y = this.fireTrackerRaysVelocitY;
+                this.fireRaysTimer = game.time.now + this.fireTrackerRaysTimerDelta;
+            }
+        }
+    },//firesRays
+
     createBoss: function () {
         // var
         /*
