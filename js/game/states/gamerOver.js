@@ -34,10 +34,12 @@ var gamerOverState = {
         startLabel.alpha = 0;
         game.add.tween(startLabel).to({alpha: 1}, 750).yoyo(true).loop().delay(750).start();
 
+        console.log('GameOver');
+
     },
 
     update: function () {
-        console.log('GameOver');
+
 
 
     }
