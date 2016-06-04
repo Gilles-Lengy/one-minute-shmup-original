@@ -106,10 +106,9 @@ var playState = {
         this.enemybossRays = game.add.group();
         this.enemybossRays.enableBody = true;
         this.enemybossRays.physicsBodyType = Phaser.Physics.ARCADE;
-        this. enemybossRays.createMultiple(30, 'bossRay');
+        this.enemybossRays.createMultiple(30, 'bossRay');
         this.enemybossRays.setAll('checkWorldBounds', true);
         this.enemybossRays.setAll('outOfBoundsKill', true);
-
 
 
         // Create Bomber 1
@@ -398,7 +397,7 @@ var playState = {
             if (this.tracker.y > 540) {
                 this.tracker.health = 0;
             }
-           // console.log(this.tracker.health + '/' + this.tracker.x + '/' + this.tracker.x)
+            // console.log(this.tracker.health + '/' + this.tracker.x + '/' + this.tracker.x)
             this.trackerFiresRays();
         }
     },
@@ -488,30 +487,28 @@ var playState = {
         // Boss fire
         this.firesRayBoss();
     },
-    firesRayBoss: function() {
-    //  To avoid them being allowed to fire too fast we set a time limit
-    if (game.time.now > this.boss.fireRayTimer)
-    {
-        //  Grab the first bullet we can from the pool
-        var bossRay = this.enemybossRays.getFirstDead();
-        if (!bossRay) {
-            return;
+    firesRayBoss: function () {
+        //  To avoid them being allowed to fire too fast we set a time limit
+        if (game.time.now > this.boss.fireRayTimer) {
+            //  Grab the first bullet we can from the pool
+            var bossRay = this.enemybossRays.getFirstDead();
+            if (!bossRay) {
+                return;
+            }
+            // Determinate the fireRayFactor
+            var fireRayFactor = this.game.rnd.integerInRange(1, this.fireRayBossFactorMax);
+            if (bossRay && fireRayFactor > this.fireRayBossFactorRef) {
+                //  And fire it
+                bossRay.reset(this.boss.x + 4, this.boss.y + 22);
+                bossRay.loadTexture('bossRay', 0);
+                bossRay.animations.add('blink');
+                bossRay.animations.play('blink', 8, true);
+                bossRay.body.velocity.y = this.bossRayMoveY;
+                this.fireRayTimer = game.time.now + this.firebossRayTimerDelta;
+                //console.log(this.fireRayTimer);
+            }
         }
-        // Determinate the fireRayFactor
-        var fireRayFactor = this.game.rnd.integerInRange(1, this.fireRayBossFactorMax);
-        if (bossRay && fireRayFactor > this.fireRayBossFactorRef)
-        {
-            //  And fire it
-            bossRay.reset(this.boss.x + 4, this.boss.y + 22);
-            bossRay.loadTexture('bossRay', 0);
-            bossRay.animations.add('blink');
-            bossRay.animations.play('blink', 8, true);
-            bossRay.body.velocity.y = this.bossRayMoveY;
-            this.fireRayTimer = game.time.now + this.firebossRayTimerDelta;
-            console.log(this.fireRayTimer);
-        }
-    }
-}, //firesRayBoss
+    }, //firesRayBoss
     countDown: function () {
         this.countdownDisplay -= 1;
         this.countdownText.setText(this.countdownString + this.countdownDisplay);
@@ -532,12 +529,24 @@ var playState = {
         game.state.start('gamerOver');
     },
     shutdown: function () {
+        
+        // Ships
         this.hero.destroy();
+
+        // Timers
         this.timerGameCompleted.timer.removeAll();
         this.timerHeroFlashes.timer.removeAll();
         this.timerCountDownGame.timer.removeAll();
         this.timerBombersGenerator.timer.removeAll();
         this.timerTrackerGenerator.timer.removeAll();
+
+        // Groups
+        this.heroBullets.destroy();
+        this.enemyBombs.destroy();
+        this.enemyBomberRays.destroy();
+        this.enemyTrackerRayss.destroy();
+        this.enemyTrackerRayss.destroy();
+        this.enemybossRays.destroy();
 
     }
 
