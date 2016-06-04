@@ -534,12 +534,16 @@ var playState = {
 
 
         if (enemyBomb.health > 0) {
-            game.global.score += this.bombScore;
+            this.scored(this.bombScore);
             this.scoreText.setText(this.scoreString + game.global.score);
             enemyBomb.health = 0;
             enemyBomb.animations.add('bomb1Explode1');
             enemyBomb.animations.play('bomb1Explode1', 9, false, true);
         }
+    },
+    scored: function(score){
+        game.global.score += score;
+        this.scoreText.setText(this.scoreString + game.global.score);
     },
     gameCompleted: function () {
         game.state.start('gamerOver');
