@@ -44,6 +44,7 @@ var playState = {
         // Scoring
         this.bombScore = 1;
         this.enemyBomberRayScore = 3;
+        this.enemyTrackerRayScore = 5;
 
 
         // Start gamepad
@@ -150,6 +151,7 @@ var playState = {
         // Handle all the collisions
         game.physics.arcade.overlap(this.heroBullets, this.enemyBombs, this.heroBulletHitsEnemyBomb, null, this);
         game.physics.arcade.overlap(this.heroBullets, this.enemyBomberRays, this.heroBulletHitsEnemyBomberRays, null, this);
+        game.physics.arcade.overlap(this.heroBullets, this.enemyTrackerRayss, this.heroBulletHitsEnemyTrackerRayss, null, this);
 
 
         // Moves the Hero
@@ -551,7 +553,14 @@ var playState = {
         console.log('bomber ray hitted');
 
     },//heroBulletHitsEnemyBomberRays
+    heroBulletHitsEnemyTrackerRayss: function (heroBullet, enemyTrackerRay) {
 
+        heroBullet.kill();
+        enemyTrackerRay.kill();
+        this.scored(this.enemyTrackerRayScore);
+        console.log('Tracker ray hitted');
+
+    },//heroBulletHitsEnemyBomberRays
     scored: function (score) {
         game.global.score += score;
         this.scoreText.setText(this.scoreString + game.global.score);
