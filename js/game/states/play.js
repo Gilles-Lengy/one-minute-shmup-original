@@ -75,44 +75,20 @@ var playState = {
         this.timerHeroFlashes = game.time.events.repeat(Phaser.Timer.SECOND * 0.18, 3, this.heroFlashes, this);
 
         // Create the hero-bullet group
-        this.heroBullets = game.add.group();
-        this.heroBullets.enableBody = true;
-        this.heroBullets.createMultiple(18, 'hero-bullet');
-        this.heroBullets.setAll('checkWorldBounds', true);
-        this.heroBullets.setAll('outOfBoundsKill', true);
+        this.heroBullets=this.groupGenerator('heroBullets',18,'hero-bullet');
+
 
         // Create the bombers's Bombs
-        this.enemyBombs = game.add.group();
-        this.enemyBombs.enableBody = true;
-        this.enemyBombs.physicsBodyType = Phaser.Physics.ARCADE;
-        this.enemyBombs.createMultiple(30, 'bomb1');
-        this.enemyBombs.setAll('checkWorldBounds', true);
-        this.enemyBombs.setAll('outOfBoundsKill', true);
+        this.enemyBombs=this.groupGenerator('enemyBombs',30,'bomb1');
 
         // Create the bomber's Ray
-        this.enemyBomberRays = game.add.group();
-        this.enemyBomberRays.enableBody = true;
-        this.enemyBomberRays.physicsBodyType = Phaser.Physics.ARCADE;
-        this.enemyBomberRays.createMultiple(30, 'bomberRay');
-        this.enemyBomberRays.setAll('checkWorldBounds', true);
-        this.enemyBomberRays.setAll('outOfBoundsKill', true);
+        this.enemyBomberRays=this.groupGenerator('enemyBomberRays',30,'bomberRay');
 
         // The Tracker's Rays
-        this.enemyTrackerRayss = game.add.group();
-        this.enemyTrackerRayss.enableBody = true;
-        this.enemyTrackerRayss.physicsBodyType = Phaser.Physics.ARCADE;
-        this.enemyTrackerRayss.createMultiple(30, 'trackerRay');
-        this.enemyTrackerRayss.setAll('checkWorldBounds', true);
-        this.enemyTrackerRayss.setAll('outOfBoundsKill', true);
+        this.enemyTrackerRayss=this.groupGenerator('enemyTrackerRayss',30,'trackerRay');
 
         // The Boss's Rays
-        this.enemybossRays = game.add.group();
-        this.enemybossRays.enableBody = true;
-        this.enemybossRays.physicsBodyType = Phaser.Physics.ARCADE;
-        this.enemybossRays.createMultiple(30, 'bossRay');
-        this.enemybossRays.setAll('checkWorldBounds', true);
-        this.enemybossRays.setAll('outOfBoundsKill', true);
-
+        this.enemyBossRays=this.groupGenerator('enemyBossRays',30,'bossRay');
 
         // Create Bomber 1
         this.bomber1 = this.createBomber(this.bomber1, 'bomber1', 145);
@@ -152,8 +128,8 @@ var playState = {
         game.physics.arcade.overlap(this.heroBullets, this.enemyBombs, this.heroBulletHitsEnemyBomb, null, this);
         game.physics.arcade.overlap(this.heroBullets, this.enemyBomberRays, this.heroBulletHitsEnemyBomberRays, null, this);
         game.physics.arcade.overlap(this.heroBullets, this.enemyTrackerRayss, this.heroBulletHitsEnemyTrackerRayss, null, this);
-        game.physics.arcade.overlap(this.heroBullets, this.enemybossRays, this.heroBulletHitsEnemyBossRays, null, this);
-
+        game.physics.arcade.overlap(this.heroBullets, this.enemyBossRays, this.heroBulletHitsEnemyBossRays, null, this);
+        
 
         // Moves the Hero
         if (pad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1) {
@@ -501,7 +477,7 @@ var playState = {
         //  To avoid them being allowed to fire too fast we set a time limit
         if (game.time.now > this.boss.fireRayTimer) {
             //  Grab the first bullet we can from the pool
-            var bossRay = this.enemybossRays.getFirstDead();
+            var bossRay = this.enemyBossRays.getFirstDead();
             if (!bossRay) {
                 return;
             }
@@ -573,6 +549,15 @@ var playState = {
         game.global.score += score;
         this.scoreText.setText(this.scoreString + game.global.score);
     },
+    groupGenerator: function(varGroup,howMany,sprite){
+        varGroup = game.add.group();
+        varGroup.enableBody = true;
+        varGroup.createMultiple(howMany, sprite);
+        varGroup.setAll('checkWorldBounds', true);
+        varGroup.setAll('outOfBoundsKill', true);
+        return varGroup;
+        
+    },//groupGenerator
     gameCompleted: function () {
         game.state.start('gamerOver');
     },
@@ -591,7 +576,7 @@ var playState = {
         this.enemyBombs.destroy();
         this.enemyBomberRays.destroy();
         this.enemyTrackerRayss.destroy();
-        this.enemybossRays.destroy();
+        this.enemyBossRays.destroy();
 
     }
 
