@@ -47,6 +47,7 @@ var playState = {
             this.enemyTrackerRayScore = 5;
             this.bomberScore = 10;
             this.trackerScore = 35;
+            //this.bossScore = 777;
 
 
             // Start gamepad
@@ -134,6 +135,7 @@ var playState = {
             game.physics.arcade.overlap(this.heroBullets, this.bomber1, this.heroBulletHitsBomber, null, this);
             game.physics.arcade.overlap(this.heroBullets, this.bomber2, this.heroBulletHitsBomber, null, this);
             game.physics.arcade.overlap(this.heroBullets, this.tracker, this.heroBulletHitsTracker, null, this);
+            game.physics.arcade.overlap(this.heroBullets, this.boss, this.heroBulletHitsBoss, null, this);
 
 
             // Moves the Hero
@@ -422,17 +424,17 @@ var playState = {
                 }
             }
         },//firesRays
-    heroBulletHitsTracker: function(varTracker, heroBullet) {
-        heroBullet.kill();
+        heroBulletHitsTracker: function (varTracker, heroBullet) {
+            heroBullet.kill();
 
-        anim = varTracker.animations.add('explode');
-        anim.onComplete.add(this.trackerExploded, this);
-        anim.play('explode', 9, false, false);
-    }, //heroBulletHitsTracker
-    trackerExploded: function(varTracker){
-        this.scored(this.trackerScore);
-        varTracker.health = 0;
-    },//trackerExploded
+            anim = varTracker.animations.add('explode');
+            anim.onComplete.add(this.trackerExploded, this);
+            anim.play('explode', 9, false, false);
+        }, //heroBulletHitsTracker
+        trackerExploded: function (varTracker) {
+            this.scored(this.trackerScore);
+            varTracker.health = 0;
+        },//trackerExploded
         createBoss: function () {
             // var
             /*
@@ -453,7 +455,7 @@ var playState = {
              */
             this.boss = game.add.sprite(560, 75, 'boss');
             this.boss.anchor.setTo(0.5, 0.5);
-            this.boss.health = 0;
+            this.boss.health = 5;
             this.boss.alive = true;
             game.physics.arcade.enable(this.boss);
             this.boss.fireRayTimer = game.time.now;
@@ -513,7 +515,41 @@ var playState = {
                     //console.log(this.fireRayTimer);
                 }
             }
-        }, //firesRayBoss
+        }, // firesRayBoss
+        heroBulletHitsBoss: function (varBoss, heroBullet) {
+            heroBullet.kill();
+            // The different states of the hero according to his health
+            varBoss.animations.add('explode1', [0, 1]);
+            varBoss.animations.add('explode2', [1, 2]);
+            varBoss.animations.add('explode3', [2, 3]);
+            varBoss.animations.add('explode4', [3, 4, 5]);
+            varBoss.animations.add('explode5', [1, 2, 3, 4]);
+            var health = varBoss.health -= 1;
+            switch (health) {
+                case 4:
+                    varBoss.play('explode1', 10, true, false);
+                    break;
+                case 3:
+                    varBoss.play('explode2', 10, true, false);
+                    break;
+                case 2:
+                    varBoss.play('explode3', 10, true, false);
+                    break;
+                case 1:
+                    varBoss.play('explode4', 10, true, false);
+                    break;
+                case 0:
+                    varBoss.play('explode5', 10, true, true);
+                    this.gameCompleted();
+                    break;
+                default:
+                    varBoss.kill();
+                    varBoss.alive = false;
+                    break;
+            }
+
+
+        }, // heroBulletHitsBoss
         countDown: function () {
             this.countdownDisplay -= 1;
             this.countdownText.setText(this.countdownString + this.countdownDisplay);
