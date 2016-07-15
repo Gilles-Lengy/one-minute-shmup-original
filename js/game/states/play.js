@@ -46,6 +46,7 @@ var playState = {
             this.enemyBomberRayScore = 3;
             this.enemyTrackerRayScore = 5;
             this.bomberScore = 10;
+            this.trackerScore = 35;
 
 
             // Start gamepad
@@ -132,6 +133,7 @@ var playState = {
             game.physics.arcade.overlap(this.heroBullets, this.enemyBossRays, this.heroBulletHitsEnemyBossRays, null, this);
             game.physics.arcade.overlap(this.heroBullets, this.bomber1, this.heroBulletHitsBomber, null, this);
             game.physics.arcade.overlap(this.heroBullets, this.bomber2, this.heroBulletHitsBomber, null, this);
+            game.physics.arcade.overlap(this.heroBullets, this.tracker, this.heroBulletHitsTracker, null, this);
 
 
             // Moves the Hero
@@ -340,6 +342,7 @@ var playState = {
             this.tracker.body.y = this.trackerPosY;
             this.tracker.health = 1;
             this.tracker.heroDetectedByTracker = false;
+            this.tracker.animations.frame = 0;
 
 
             // var
@@ -419,7 +422,17 @@ var playState = {
                 }
             }
         },//firesRays
+    heroBulletHitsTracker: function(varTracker, heroBullet) {
+        heroBullet.kill();
 
+        anim = varTracker.animations.add('explode');
+        anim.onComplete.add(this.trackerExploded, this);
+        anim.play('explode', 9, false, false);
+    }, //heroBulletHitsTracker
+    trackerExploded: function(varTracker){
+        this.scored(this.trackerScore);
+        varTracker.health = 0;
+    },//trackerExploded
         createBoss: function () {
             // var
             /*
