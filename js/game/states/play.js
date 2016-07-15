@@ -131,6 +131,7 @@ var playState = {
             game.physics.arcade.overlap(this.heroBullets, this.enemyTrackerRayss, this.heroBulletHitsEnemyTrackerRayss, null, this);
             game.physics.arcade.overlap(this.heroBullets, this.enemyBossRays, this.heroBulletHitsEnemyBossRays, null, this);
             game.physics.arcade.overlap(this.heroBullets, this.bomber1, this.heroBulletHitsBomber, null, this);
+            game.physics.arcade.overlap(this.heroBullets, this.bomber2, this.heroBulletHitsBomber, null, this);
 
 
             // Moves the Hero
@@ -210,7 +211,7 @@ var playState = {
 
         },
         launchBomber: function (varBomber) {
-            varBomber.loadTexture('bomber',0);
+            varBomber.loadTexture('bomber', 0);
             varBomber.animations.add('blink');
             varBomber.animations.play('blink', 3, true);
             varBomber.health = 1;
@@ -557,16 +558,11 @@ var playState = {
             anim = varBomber.animations.add('explode');
             anim.onComplete.add(this.bomberExploded, this);
             anim.play('explode', 9, false, false);
-            //this.launchBomber(varBomber);
-
-            this.scored(this.bomberScore);
-
-            console.log('bomber hitted');
 
         },
-        bomberExploded: function (sprite, animation) {
-
-            sprite.health = 0;
+        bomberExploded: function (varBomber) {
+            this.scored(this.bomberScore);
+            varBomber.health = 0;
 
         },
         scored: function (score) {
