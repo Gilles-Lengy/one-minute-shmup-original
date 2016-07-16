@@ -224,6 +224,7 @@ var playState = {
                     break;
                 case 0:
                     this.hero.play('explode6');
+                    this.gameCompleted();
                     break;
                 default:
                     this.hero.kill();
