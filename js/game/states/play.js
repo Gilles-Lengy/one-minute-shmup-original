@@ -142,7 +142,7 @@ var playState = {
             game.physics.arcade.overlap(this.hero, this.enemyBombs, this.bombHitHero, null, this);
             game.physics.arcade.overlap(this.hero, this.enemyBomberRays, this.bomberRayHitsHero, null, this);
             game.physics.arcade.overlap(this.hero, this.enemyTrackerRayss, this.enemyTrackerRaysHitsHero, null, this);
-            //game.physics.arcade.overlap(this.hero, this.enemyBossRays, this.heroBulletHitsEnemyBossRays, null, this);
+            game.physics.arcade.overlap(this.hero, this.enemyBossRays, this.enemyBossRaysHitsHero, null, this);
 
             // Moves the Hero
             if (pad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1) {
@@ -456,6 +456,7 @@ var playState = {
         }
         ,
         trackerFiresRays: function () {
+            /*
             //  To avoid them being allowed to fire too fast we set a time limit
             if (game.time.now > this.fireRaysTimer) {
                 // Determinate the dropBombFactor
@@ -480,6 +481,7 @@ var playState = {
                     this.fireRaysTimer = game.time.now + this.fireTrackerRaysTimerDelta;
                 }
             }
+            /**/
         }
         ,//firesRays
         heroBulletHitsTracker: function (varTracker, heroBullet) {
@@ -584,6 +586,10 @@ var playState = {
             }
         }
         , // firesRayBoss
+        enemyBossRaysHitsHero: function (dummyHero, enemyRay) {
+            enemyRay.kill();
+            this.heroHit();
+        },// Boss ray hits hero
         heroBulletHitsBoss: function (varBoss, heroBullet) {
             heroBullet.kill();
             // The different states of the hero according to his health
