@@ -14,6 +14,8 @@ var playState = {
             this.levelString = 'Level : ';
             // Level
             this.level = 1;
+            // Hero health
+            this.health = 6;
             // PosXXXX VelocityYYYYY
             this.heroBulletVelocityY = -400;
             this.bomberVelocityX = 75;
@@ -76,6 +78,7 @@ var playState = {
             this.hero.anchor.setTo(0.5, 0.5);
             this.hero.frame = 1;
             this.timerHeroFlashes = game.time.events.repeat(Phaser.Timer.SECOND * 0.18, 3, this.heroFlashes, this);
+            game.physics.arcade.enable(this.hero);
 
             // Create the hero-bullet group
             this.heroBullets = this.groupGenerator('heroBullets', 18, 'hero-bullet');
@@ -136,7 +139,7 @@ var playState = {
             game.physics.arcade.overlap(this.heroBullets, this.bomber2, this.heroBulletHitsBomber, null, this);
             game.physics.arcade.overlap(this.heroBullets, this.tracker, this.heroBulletHitsTracker, null, this);
             game.physics.arcade.overlap(this.heroBullets, this.boss, this.heroBulletHitsBoss, null, this);
-
+            game.physics.arcade.overlap(this.hero,this.enemyBombs , this.bombHitHero, null, this);
 
             // Moves the Hero
             if (pad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1) {
@@ -193,6 +196,41 @@ var playState = {
             bullet.body.velocity.y = this.heroBulletVelocityY;
 
         },
+        heroHit: function () {
+
+            // The different states of the hero according to his health
+            this.hero.animations.add('explode1', [1, 2], 10, false);
+            this.hero.animations.add('explode2', [3, 4], 10, false);
+            this.hero.animations.add('explode3', [5, 6], 10, false);
+            this.hero.animations.add('explode4', [7, 8], 10, false);
+            this.hero.animations.add('explode5', [9, 10], 10, false);
+            this.hero.animations.add('explode6', [11, 10], 10, true);
+            var health = this.health -= 1;
+            switch (health) {
+                case 5:
+                    this.hero.play('explode1');
+                    break;
+                case 4:
+                    this.hero.play('explode2');
+                    break;
+                case 3:
+                    this.hero.play('explode3');
+                    break;
+                case 2:
+                    this.hero.play('explode4');
+                    break;
+                case 1:
+                    this.hero.play('explode5');
+                    break;
+                case 0:
+                    this.hero.play('explode6');
+                    break;
+                default:
+                    this.hero.kill();
+                    break;
+            }
+
+        }, // Hero hit
         onDown360Play: function (button) {
             //console.log('onDown360 Play');
             if (button.buttonCode === Phaser.Gamepad.XBOX360_A) {
@@ -303,6 +341,10 @@ var playState = {
                 }
             }
         }, //firesRay
+        bombHitHero: function (dummyHero, enemyBomb) {
+            enemyBomb.kill();
+            this.heroHit();
+        },// Bomb hits hero
         createTracker: function () {
             // var
             //var lr;
@@ -337,7 +379,8 @@ var playState = {
             this.tracker.heroDetectedByTracker = false;
 
             //return this.tracker;
-        },
+        }
+        ,
         launchTracker: function () {
 
             this.tracker.body.velocity.y = 0;
@@ -361,14 +404,16 @@ var playState = {
                 this.tracker.body.velocity.x = -this.trackerVelocityX;
             }
 
-        },
+        }
+        ,
         relaunchTracker: function () {
 
             if (this.tracker.health === 0 && this.level > 2) {
                 this.launchTracker();
             }
 
-        },
+        }
+        ,
         updateTracker: function () {
             if (this.tracker.health === 1) {
                 var posX = this.tracker.x;
@@ -397,7 +442,8 @@ var playState = {
                 // console.log(this.tracker.health + '/' + this.tracker.x + '/' + this.tracker.x)
                 this.trackerFiresRays();
             }
-        },
+        }
+        ,
         trackerFiresRays: function () {
             //  To avoid them being allowed to fire too fast we set a time limit
             if (game.time.now > this.fireRaysTimer) {
@@ -423,18 +469,21 @@ var playState = {
                     this.fireRaysTimer = game.time.now + this.fireTrackerRaysTimerDelta;
                 }
             }
-        },//firesRays
+        }
+        ,//firesRays
         heroBulletHitsTracker: function (varTracker, heroBullet) {
             heroBullet.kill();
 
             anim = varTracker.animations.add('explode');
             anim.onComplete.add(this.trackerExploded, this);
             anim.play('explode', 9, false, false);
-        }, //heroBulletHitsTracker
+        }
+        , //heroBulletHitsTracker
         trackerExploded: function (varTracker) {
             this.scored(this.trackerScore);
             varTracker.health = 0;
-        },//trackerExploded
+        }
+        ,//trackerExploded
         createBoss: function () {
             // var
             /*
@@ -463,7 +512,8 @@ var playState = {
             //this.game.physics.arcade.enable(this.Boss);
             this.boss.name = 'boss';
             //return this.boss;
-        },
+        }
+        ,
         launchBoss: function () {
             this.boss.health = 5;
             // var
@@ -480,7 +530,8 @@ var playState = {
                 this.boss.body.velocity.x = -this.bossVelocityX;
             }
 
-        },
+        }
+        ,
         updateBoss: function () {
 
             var posX = this.boss.x;
@@ -493,7 +544,8 @@ var playState = {
             }
             // Boss fire
             this.firesRayBoss();
-        },
+        }
+        ,
         firesRayBoss: function () {
             //  To avoid them being allowed to fire too fast we set a time limit
             if (game.time.now > this.boss.fireRayTimer) {
@@ -515,7 +567,8 @@ var playState = {
                     //console.log(this.fireRayTimer);
                 }
             }
-        }, // firesRayBoss
+        }
+        , // firesRayBoss
         heroBulletHitsBoss: function (varBoss, heroBullet) {
             heroBullet.kill();
             // The different states of the hero according to his health
@@ -549,7 +602,8 @@ var playState = {
             }
 
 
-        }, // heroBulletHitsBoss
+        }
+        , // heroBulletHitsBoss
         countDown: function () {
             this.countdownDisplay -= 1;
             this.countdownText.setText(this.countdownString + this.countdownDisplay);
@@ -565,7 +619,8 @@ var playState = {
                     break;
             }
             this.levelText.setText(this.levelString + this.level);
-        },
+        }
+        ,
         heroBulletHitsEnemyBomb: function (heroBullet, enemyBomb) {
             heroBullet.kill();
 
@@ -576,7 +631,8 @@ var playState = {
                 enemyBomb.animations.add('bomb1Explode1');
                 enemyBomb.animations.play('bomb1Explode1', 9, false, true);
             }
-        },
+        }
+        ,
         heroBulletHitsEnemyBomberRays: function (heroBullet, enemyBomberRay) {
 
             heroBullet.kill();
@@ -584,7 +640,8 @@ var playState = {
             this.scored(this.enemyBomberRayScore);
             console.log('bomber ray hitted');
 
-        },//heroBulletHitsEnemyBomberRays
+        }
+        ,//heroBulletHitsEnemyBomberRays
         heroBulletHitsEnemyTrackerRayss: function (heroBullet, enemyTrackerRay) {
 
             heroBullet.kill();
@@ -592,14 +649,16 @@ var playState = {
             this.scored(this.enemyTrackerRayScore);
             console.log('Tracker ray hitted');
 
-        },//heroBulletHitsEnemyTrackerRayss
+        }
+        ,//heroBulletHitsEnemyTrackerRayss
         heroBulletHitsEnemyBossRays: function (heroBullet) {
 
             heroBullet.kill();
 
             console.log('enemyBossRay hitted');
 
-        },//heroBulletHitsEnemyBossRays
+        }
+        ,//heroBulletHitsEnemyBossRays
         heroBulletHitsBomber: function (varBomber, heroBullet) {
             heroBullet.kill();
 
@@ -608,16 +667,19 @@ var playState = {
             anim.onComplete.add(this.bomberExploded, this);
             anim.play('explode', 9, false, false);
 
-        },
+        }
+        ,
         bomberExploded: function (varBomber) {
             this.scored(this.bomberScore);
             varBomber.health = 0;
 
-        },
+        }
+        ,
         scored: function (score) {
             game.global.score += score;
             this.scoreText.setText(this.scoreString + game.global.score);
-        },
+        }
+        ,
         groupGenerator: function (varGroup, howMany, sprite) {
             varGroup = game.add.group();
             varGroup.enableBody = true;
