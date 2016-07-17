@@ -5,10 +5,7 @@
 var gamerOverState = {
 
     create: function () {
-
-        // Global Variables
-        game.global.score = 0;
-
+        
         // init
         this.scoreString = 'Score : ';
 
