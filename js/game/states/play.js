@@ -143,6 +143,7 @@ var playState = {
             game.physics.arcade.overlap(this.hero, this.enemyBomberRays, this.enemyBulletHitsHero, null, this);
             game.physics.arcade.overlap(this.hero, this.enemyTrackerRayss, this.enemyBulletHitsHero, null, this);
             game.physics.arcade.overlap(this.hero, this.enemyBossRays, this.enemyBulletHitsHero, null, this);
+            game.physics.arcade.overlap(this.hero, this.tracker, this.trackerHitsHero, null, this);
 
             // Moves the Hero
             if (pad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1) {
@@ -450,31 +451,31 @@ var playState = {
         ,
         trackerFiresRays: function () {
             /**/
-             //  To avoid them being allowed to fire too fast we set a time limit
-             if (game.time.now > this.fireRaysTimer) {
-             // Determinate the dropBombFactor
-             var fireTrackerRaysFactor = this.game.rnd.integerInRange(1, this.fireTrackerRaysFactorMax);
-             //  Grab the first bullet we can from the pool
-             var enemyTrackerRay1 = this.enemyTrackerRayss.getFirstDead();
-             if (!enemyTrackerRay1) {
-             return;
-             }
-             if (enemyTrackerRay1 && fireTrackerRaysFactor > this.fireTrackerRaysRef) {
-             //  And fire it
-             enemyTrackerRay1.name = 'enemyTrackerRay';
-             enemyTrackerRay1.reset(this.tracker.x - 18, this.tracker.y + 18);
-             enemyTrackerRay1.body.velocity.y = this.fireTrackerRaysVelocitY;
-             }
-             var enemyTrackerRay2 = this.enemyTrackerRayss.getFirstExists(false);
-             if (enemyTrackerRay2 && fireTrackerRaysFactor > this.fireTrackerRaysRef) {
-             //  And fire it
-             enemyTrackerRay2.name = 'enemyTrackerRay';
-             enemyTrackerRay2.reset(this.tracker.x + 18, this.tracker.y + 18);
-             enemyTrackerRay2.body.velocity.y = this.fireTrackerRaysVelocitY;
-             this.fireRaysTimer = game.time.now + this.fireTrackerRaysTimerDelta;
-             }
-             }
-             /**/
+            //  To avoid them being allowed to fire too fast we set a time limit
+            if (game.time.now > this.fireRaysTimer) {
+                // Determinate the dropBombFactor
+                var fireTrackerRaysFactor = this.game.rnd.integerInRange(1, this.fireTrackerRaysFactorMax);
+                //  Grab the first bullet we can from the pool
+                var enemyTrackerRay1 = this.enemyTrackerRayss.getFirstDead();
+                if (!enemyTrackerRay1) {
+                    return;
+                }
+                if (enemyTrackerRay1 && fireTrackerRaysFactor > this.fireTrackerRaysRef) {
+                    //  And fire it
+                    enemyTrackerRay1.name = 'enemyTrackerRay';
+                    enemyTrackerRay1.reset(this.tracker.x - 18, this.tracker.y + 18);
+                    enemyTrackerRay1.body.velocity.y = this.fireTrackerRaysVelocitY;
+                }
+                var enemyTrackerRay2 = this.enemyTrackerRayss.getFirstExists(false);
+                if (enemyTrackerRay2 && fireTrackerRaysFactor > this.fireTrackerRaysRef) {
+                    //  And fire it
+                    enemyTrackerRay2.name = 'enemyTrackerRay';
+                    enemyTrackerRay2.reset(this.tracker.x + 18, this.tracker.y + 18);
+                    enemyTrackerRay2.body.velocity.y = this.fireTrackerRaysVelocitY;
+                    this.fireRaysTimer = game.time.now + this.fireTrackerRaysTimerDelta;
+                }
+            }
+            /**/
         }
         ,//firesRays
         heroBulletHitsTracker: function (varTracker, heroBullet) {
@@ -485,6 +486,13 @@ var playState = {
             anim.play('explode', 9, false, false);
         }
         , //heroBulletHitsTracker
+        trackerHitsHero: function (hero, tracker) {
+            tracker.kill();
+            anim = hero.animations.add('explode');
+            anim.onComplete.add(this.heroDestroyedByTracker, this);
+            anim.play('explode', 10, false, true);
+
+        }, // trackerHitsHero
         trackerExploded: function (varTracker) {
             this.scored(this.trackerScore);
             varTracker.health = 0;
@@ -679,6 +687,11 @@ var playState = {
 
         }
         ,
+        heroDestroyedByTracker: function (hero) {
+            hero.kill();
+            this.gameCompleted();
+
+        },// heroDestroyedByTracker
         bomberExploded: function (varBomber) {
             this.scored(this.bomberScore);
             varBomber.health = 0;
