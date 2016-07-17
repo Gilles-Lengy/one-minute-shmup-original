@@ -49,7 +49,7 @@ var playState = {
             this.enemyTrackerRayScore = 5;
             this.bomberScore = 10;
             this.trackerScore = 35;
-            //this.bossScore = 777;
+            this.bossScore = 777;
 
 
             // Start gamepad
@@ -611,6 +611,7 @@ var playState = {
                     break;
                 case 0:
                     varBoss.play('explode5', 10, true, true);
+                    this.scored(this.bossScore);
                     this.gameCompleted();
                     break;
                 default:
