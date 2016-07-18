@@ -10,8 +10,10 @@ var gamerOverState = {
         this.scoreString = 'Score : ';
         if(game.global.bossDestroyed){
             this.bossDestroyedString = "You're the boss !";
+            this.bossFrame=4;
         }else{
             this.bossDestroyedString = "You know who's the boss !";
+            this.bossFrame=0;
         }
 
         // Start gamepad
@@ -27,6 +29,11 @@ var gamerOverState = {
 
         // The boss text
         game.add.text(game.width / 2, 140, this.bossDestroyedString, {fontSize: '18px', fill: '#fff'});
+
+        // The boss
+        this.boss = game.add.sprite(game.width / 2, game.height / 2, 'boss');
+        this.boss.anchor.setTo(0.5, 0.5);
+        this.boss.frame=this.bossFrame;
 
         this.gameText = game.add.text(100, 100, 'game over', {fontSize: '36px', fill: '#fff'});
 
