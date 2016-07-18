@@ -7,6 +7,7 @@ var playState = {
              *************************************************/
             // Global Variables
             game.global.score = 0;
+            game.global.bossDestroyed = false;
             // Texts
             this.countdownDisplay = 60;
             this.countdownString = 'Countdown : ';
@@ -612,6 +613,7 @@ var playState = {
                 case 0:
                     varBoss.play('explode5', 10, true, true);
                     this.scored(this.bossScore);
+                    game.global.bossDestroyed = true;
                     this.gameCompleted();
                     break;
                 default:

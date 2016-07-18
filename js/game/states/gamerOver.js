@@ -8,6 +8,11 @@ var gamerOverState = {
         
         // init
         this.scoreString = 'Score : ';
+        if(game.global.bossDestroyed){
+            this.bossDestroyedString = "You're the boss !";
+        }else{
+            this.bossDestroyedString = "You know who's the boss !";
+        }
 
         // Start gamepad
         game.input.gamepad.start();
@@ -20,10 +25,13 @@ var gamerOverState = {
         // The score
         this.scoreText = game.add.text(5, 0, this.scoreString + game.global.score, {fontSize: '18px', fill: '#fff'});
 
+        // The boss text
+        game.add.text(game.width / 2, 140, this.bossDestroyedString, {fontSize: '18px', fill: '#fff'});
+
         this.gameText = game.add.text(100, 100, 'game over', {fontSize: '36px', fill: '#fff'});
 
         // How to start the game, with tween
-        var startLabel = game.add.text(game.width / 2, game.height / 2, 'Press the button START', {
+        var startLabel = game.add.text(game.width / 2, game.height - 20, 'Press the button START', {
             font: '25px Arial',
             fill: '#ffffff'
         });
