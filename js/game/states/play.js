@@ -61,6 +61,20 @@ var playState = {
             // To detect the pressed buttons
             pad.getButton(Phaser.Gamepad.XBOX360_A).onDown.add(this.onDown360Play, this);
 
+            // Add a starfield to the background of the game
+            var starfield = game.add.emitter(game.width/2, 0, 999);
+           // starfield.alpha = 0.8;
+            starfield.width = game.width;
+            starfield.makeParticles('pixel');
+            starfield.setYSpeed(180, 360);
+            starfield.setXSpeed(0, 0);
+            starfield.minParticleScale = 0.25;
+            starfield.maxParticleScale = 0.75;
+            starfield.setRotation(0, 0);
+            starfield.gravity = 0;
+            starfield.start(false, 7000, 58, 0);
+
+
             // The countdown and the level
             this.timerCountDownGame = game.time.events.repeat(Phaser.Timer.SECOND, 60, this.countDown, this);
             this.countdownText = game.add.bitmapText(200, 7, 'desonanz0', this.countdownString + this.countdownDisplay, 18);
@@ -719,6 +733,9 @@ var playState = {
         }
         ,
         shutdown: function () {
+
+            // starfield
+            starfield.destroy();
 
             // Ships
             this.hero.destroy();

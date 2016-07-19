@@ -20,6 +20,7 @@ var loadState = {
         this.load.bitmapFont('desonanz1', 'assets/fonts/desonanz1.png', 'assets/fonts/desonanz1.fnt');
 
         // Load all image assets
+        game.load.image('pixel', 'assets/images/pixel.png');
         game.load.image('hero-bullet', 'assets/images/bullet-hero-1.png');
         game.load.image('trackerRay', 'assets/images/enemy-tracker-1-ray.png');
         game.load.spritesheet('bossRay', 'assets/images/boss-1-large-ray-1.png', 104, 10, 2);
