@@ -29,14 +29,12 @@ var menuState = {
         // Name of the game with tween
         var nameLabel = game.add.text(game.width / 2, 80, 'ONE Minute SHMUP');
         nameLabel.fill = '#ffffff';
-        nameLabel.font = 'Ranga';
         nameLabel.fontSize = 70;
         nameLabel.anchor.setTo(0.5, 0.5);
         nameLabel.scale.setTo(0, 0);
 
         var nameLabelOriginal = game.add.text(game.width / 2, 140, 'Original');
         nameLabelOriginal.fill = '#ffffff';
-        nameLabelOriginal.font = 'Seaweed Script';
         nameLabelOriginal.fontSize = 40;
         nameLabelOriginal.anchor.setTo(0.5, 0.5);
         nameLabelOriginal.scale.setTo(0, 0);

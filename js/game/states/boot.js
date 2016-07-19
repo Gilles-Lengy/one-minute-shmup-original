@@ -1,19 +1,3 @@
-var wfconfig = {
-
-    active: function() {
-        console.log("font loaded");
-        bootState.preload();
-    },
-
-    google: {
-        families: [ 'Ranga:700:latin' , 'Seaweed+Script:400:latin' ]
-    }
-
-};
-
-WebFont.load(wfconfig);
-
-
 var bootState = {
 
     preload: function () {
