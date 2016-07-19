@@ -63,14 +63,12 @@ var playState = {
 
             // The countdown and the level
             this.timerCountDownGame = game.time.events.repeat(Phaser.Timer.SECOND, 60, this.countDown, this);
-            this.countdownText = game.add.text(200, 0, this.countdownString + this.countdownDisplay, {
-                fontSize: '18px',
-                fill: '#fff'
-            });
-            this.levelText = game.add.text(420, 0, this.levelString + this.level, {fontSize: '18px', fill: '#fff'});
+            this.countdownText = game.add.bitmapText(200, 7, 'desonanz0', this.countdownString + this.countdownDisplay, 18);
+
+            this.levelText = game.add.bitmapText(420, 7, 'desonanz0', this.levelString + this.level, 18);
 
             // The score
-            this.scoreText = game.add.text(5, 0, this.scoreString + game.global.score, {fontSize: '18px', fill: '#fff'});
+            this.scoreText = game.add.bitmapText(7, 7, 'desonanz0', this.scoreString + game.global.score, 18);// game.add.text(5, 0, this.scoreString + game.global.score, {fontSize: '18px', fill: '#fff'});
 
 
             // Hero
