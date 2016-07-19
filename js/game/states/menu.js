@@ -27,16 +27,12 @@ var menuState = {
         //http://www.html5gamedevs.com/topic/1651-tween-oncompletecallback/
 
         // Name of the game with tween
-        var nameLabel = game.add.text(game.width / 2, 80, 'ONE Minute SHMUP');
-        nameLabel.fill = '#ffffff';
-        nameLabel.fontSize = 70;
+        var nameLabel = game.add.bitmapText(game.width / 2, 140, 'desonanz1','ONE Minute SHMUP',21);
         nameLabel.anchor.setTo(0.5, 0.5);
         nameLabel.scale.setTo(0, 0);
 
-        var nameLabelOriginal = game.add.text(game.width / 2, 140, 'Original');
-        nameLabelOriginal.fill = '#ffffff';
-        nameLabelOriginal.fontSize = 40;
-        nameLabelOriginal.anchor.setTo(0.5, 0.5);
+        var nameLabelOriginal = game.add.bitmapText(game.width / 2, 80, 'desonanz1','Original',16);
+         nameLabelOriginal.anchor.setTo(0.5, 0.5);
         nameLabelOriginal.scale.setTo(0, 0);
 
         game.add.tween(nameLabel.scale).to({x: 1, y: 1}, 1000).easing(Phaser.Easing.Bounce.Out).start();
@@ -46,10 +42,7 @@ var menuState = {
         }, 1000).easing(Phaser.Easing.Bounce.Out).delay(1000).start();
 
         // How to start the game, with tween
-        var startLabel = game.add.text(game.width / 2, game.height / 2, 'Press the button START', {
-            font: '25px Arial',
-            fill: '#ffffff'
-        });
+        var startLabel = game.add.bitmapText(game.width / 2, game.height / 2, 'desonanz1','Press the button START',12);
         startLabel.anchor.setTo(0.5, 0.5);
         startLabel.alpha = 0;
         game.add.tween(startLabel).to({alpha: 1}, 750).yoyo(true).loop().delay(750).start();

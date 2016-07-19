@@ -15,6 +15,10 @@ var loadState = {
         progressBar.anchor.setTo(0.5, 0.5);
         game.load.setPreloadSprite(progressBar);
 
+        // Load Bitmap Fonts
+        this.load.bitmapFont('desonanz0', 'assets/fonts/desonanz0.png', 'assets/fonts/desonanz0.fnt');
+        this.load.bitmapFont('desonanz1', 'assets/fonts/desonanz1.png', 'assets/fonts/desonanz1.fnt');
+
         // Load all image assets
         game.load.image('hero-bullet', 'assets/images/bullet-hero-1.png');
         game.load.image('trackerRay', 'assets/images/enemy-tracker-1-ray.png');
